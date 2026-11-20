@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stożek Dripper</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Stożek 02: a handmade porcelain pour-over dripper. One-step checkout with card, Apple Pay or Google Pay.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: split product stage (glaze panel + sticky buy box) → brew recipe band with timed pours → sample reviews → FAQ → owner's order table → stack footer. Mobile gets a fixed buy bar. */
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --panel:#E0E9E6; --ink:#17211F; --muted:#56635F; --line:#D5DDDA;
+  --accent:#1D5C54; --accent-hover:#164A44; --accent-ink:#FFFFFF; --accent-soft:#D3E6E0;
+  --good:#2A7A4B; --good-soft:#DDF0E3; --info:#3D5A80; --info-soft:#E1E8F2;
+  --outline:rgba(23,33,31,.16); --ground:rgba(23,33,31,.13); --shadow:rgba(23,33,31,.12);
+  --coffee:#6B4429; --hole:#131716;
+  --f-display:"Bricolage Grotesque","Figtree",system-ui,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1211; --surface:#151B19; --panel:#1A2320; --ink:#E5EBE9; --muted:#9AA7A3; --line:#28322F;
+    --accent:#80C7B8; --accent-hover:#9AD5C8; --accent-ink:#0A1916; --accent-soft:#1E3530;
+    --good:#72CC96; --good-soft:#18301F; --info:#9DB7DA; --info-soft:#1C2635;
+    --outline:rgba(229,235,233,.20); --ground:rgba(0,0,0,.45); --shadow:rgba(0,0,0,.5);
+    --coffee:#8A5A38; --hole:#060807;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1211; --surface:#151B19; --panel:#1A2320; --ink:#E5EBE9; --muted:#9AA7A3; --line:#28322F;
+  --accent:#80C7B8; --accent-hover:#9AD5C8; --accent-ink:#0A1916; --accent-soft:#1E3530;
+  --good:#72CC96; --good-soft:#18301F; --info:#9DB7DA; --info-soft:#1C2635;
+  --outline:rgba(229,235,233,.20); --ground:rgba(0,0,0,.45); --shadow:rgba(0,0,0,.5);
+  --coffee:#8A5A38; --hole:#060807;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+img,svg{max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.015em}
+p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow,.label{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.note{font-size:.88rem;color:var(--muted)}
+.sample{font-size:.82rem;color:var(--muted)}
+
+/* Buttons */
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:600 1rem/1 var(--f-body);padding:14px 20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .15s ease,transform .15s ease}
+.btn:hover{background:var(--accent-hover)}
+.btn:active{transform:translateY(1px)}
+.btn-sm{padding:10px 14px;font-size:.92rem;border-radius:10px}
+.btn-lg{padding:18px 22px;font-size:1.08rem;width:100%}
+.btn-ghost{appearance:none;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:12px;font:600 .95rem/1 var(--f-body);padding:13px 16px;cursor:pointer}
+.btn-ghost:hover{border-color:var(--muted)}
+
+/* Header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:20px;padding-block:12px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:1.45rem;letter-spacing:-.03em;text-decoration:none;font-variation-settings:"opsz" 96}
+.brand span{color:var(--accent)}
+.nav{display:flex;gap:22px;margin-left:12px}
+.nav a{text-decoration:none;color:var(--muted);font-weight:500;font-size:.95rem}
+.nav a:hover{color:var(--ink)}
+.top-end{margin-left:auto;display:flex;align-items:center;gap:12px}
+.chip{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px dashed var(--muted);color:var(--muted);text-decoration:none;white-space:nowrap}
+@media (max-width:760px){.nav{display:none}}
+
+/* Product */
+.product{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:clamp(24px,4.5vw,64px);padding-block:32px 80px;align-items:start}
+.stage{position:relative;background:var(--panel);border-radius:28px;aspect-ratio:1/1;max-width:100%;display:grid;place-items:center;overflow:hidden}
+.stage .art{width:84%;height:auto;display:block}
+.views{position:absolute;top:16px;left:16px;display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.views button{appearance:none;border:0;background:transparent;color:var(--muted);font:600 .85rem/1 var(--f-body);padding:9px 12px;border-radius:9px;cursor:pointer}
+.views button[aria-selected="true"]{background:var(--accent-soft);color:var(--ink)}
+.stage-cap{position:absolute;left:18px;bottom:16px;right:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+
+.buybox{position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;flex-direction:column;gap:20px;min-width:0}
+.buybox h1{font-size:clamp(2.5rem,5.2vw,3.9rem);line-height:.98;font-weight:780;font-variation-settings:"opsz" 96;letter-spacing:-.035em}
+.rating{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.95rem}
+.stars{color:var(--accent);letter-spacing:2px}
+.lede{font-size:1.1rem;color:var(--muted);max-width:52ch}
+.price-row{display:flex;align-items:baseline;gap:10px}
+.price{font-family:var(--f-display);font-size:2.2rem;font-weight:700;font-variation-settings:"opsz" 48;font-variant-numeric:tabular-nums}
+.glazes{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.glazes legend{padding:0;margin-bottom:10px}
+.label-val{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-size:.95rem;color:var(--ink);font-weight:600;margin-left:6px}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.sw{position:relative;display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;font-weight:500;background:var(--surface)}
+.sw input{position:absolute;opacity:0;pointer-events:none}
+.sw .dot{width:26px;height:26px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 1px var(--outline)}
+.sw:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.sw:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:3px}
+.qty-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:12px;background:var(--surface)}
+.stepper button{appearance:none;border:0;background:transparent;color:var(--ink);width:44px;height:44px;font-size:1.3rem;cursor:pointer;border-radius:10px}
+.stepper button:disabled{color:var(--line);cursor:default}
+.stepper output{min-width:34px;text-align:center;font-family:var(--f-mono);font-weight:500;font-size:1.05rem}
+.ship-note{font-size:.92rem;color:var(--muted);margin-top:-8px}
+.paywith{display:flex;gap:8px;flex-wrap:wrap}
+.paywith span{font-size:.8rem;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid var(--line);color:var(--muted);background:var(--surface)}
+.assure{list-style:none;margin:0;padding:0;display:grid;gap:10px;border-top:1px solid var(--line);padding-top:18px}
+.assure li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+.assure svg{flex:none;margin-top:3px;color:var(--accent)}
+.specs{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:0;border-top:1px solid var(--line);padding-top:18px;font-size:.92rem}
+.specs dt{color:var(--muted)}
+.specs dd{margin:0;font-family:var(--f-mono);font-size:.86rem}
+
+/* Product art */
+.art .ground{fill:var(--ground)}
+.art .handle{fill:none;stroke:var(--g2);stroke-width:20;stroke-linecap:round}
+.art .base{fill:var(--g3)}
+.art .base-top{fill:var(--g2)}
+.art .body,.art .rim,.art .rim-top{stroke:var(--outline);stroke-width:1.5}
+.art .throw path{fill:none;stroke:var(--g3);stroke-opacity:.38;stroke-width:1.5}
+.art .inner{fill:var(--g-in)}
+.art .ribs-in path,.art .ribs-top path{fill:none;stroke:var(--g3);stroke-opacity:.6;stroke-width:2.4;stroke-linecap:round}
+.art .speck circle{fill:var(--speck)}
+.art .drop{fill:var(--coffee);animation:drip 2.6s cubic-bezier(.5,0,.9,.5) infinite}
+.art .hole{fill:var(--hole)}
+.art .handle-top{fill:var(--g2);stroke:var(--outline);stroke-width:1.5}
+.art .handle-gap{fill:var(--panel)}
+@keyframes drip{0%{transform:translateY(0);opacity:0}12%{opacity:1}70%{opacity:1}100%{transform:translateY(52px);opacity:0}}
+.stage[data-glaze="celadon"]{--g1:#D3E6DF;--g2:#93BDB2;--g3:#5D8C81;--g-in:#4A776D;--speck:rgba(28,40,36,.38)}
+.stage[data-glaze="oat"]{--g1:#F3EBDD;--g2:#D6C5A6;--g3:#A28D69;--g-in:#8A7553;--speck:rgba(60,44,24,.42)}
+.stage[data-glaze="charcoal"]{--g1:#6E747A;--g2:#454A50;--g3:#26292D;--g-in:#1C1E21;--speck:rgba(235,235,230,.22)}
+.dot-celadon{--c:#93BDB2}.dot-oat{--c:#D6C5A6}.dot-charcoal{--c:#454A50}
+
+/* Brew band */
+.band{background:var(--surface);border-block:1px solid var(--line)}
+.brew{padding-block:72px;display:grid;gap:40px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 40px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(1.8rem,3.4vw,2.6rem);line-height:1.05;font-weight:720;font-variation-settings:"opsz" 72;max-width:18ch}
+.sec-head p{max-width:46ch;color:var(--muted)}
+.recipe{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin:0;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.recipe div{padding:18px 18px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px;min-width:0}
+.recipe div:last-child{border-right:0}
+.recipe dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.recipe dd{margin:0;font-family:var(--f-display);font-size:1.7rem;font-weight:650;font-variant-numeric:tabular-nums;font-variation-settings:"opsz" 48;white-space:nowrap}
+.recipe dd small{font-size:.95rem;font-weight:500;color:var(--muted);margin-left:2px}
+.pours{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;position:relative}
+.pours::before{content:"";position:absolute;left:0;right:0;top:17px;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 14px)}
+.pours li{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pours time{position:relative;align-self:flex-start;font-family:var(--f-mono);font-size:.9rem;font-weight:500;background:var(--accent);color:var(--accent-ink);padding:8px 12px;border-radius:999px;font-variant-numeric:tabular-nums}
+.pours h3{font-size:1.2rem;font-weight:680;margin-top:8px}
+.pours p{color:var(--muted);font-size:.95rem}
+.pours .grams{font-family:var(--f-mono);font-size:.82rem;color:var(--ink)}
+
+/* Reviews */
+.reviews{padding-block:80px;display:grid;gap:32px}
+.rev-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.rev{margin:0;padding:24px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.rev blockquote{margin:0;font-size:1.05rem;line-height:1.5}
+.rev figcaption{margin-top:auto;font-size:.9rem;color:var(--muted)}
+.rev figcaption strong{color:var(--ink);font-weight:600}
+
+/* FAQ */
+.faq{padding-block:0 80px;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:32px 64px;align-items:start}
+.faq h2{font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:720;line-height:1.05}
+.faq-list{display:grid;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;padding:18px 0;font-weight:600;font-size:1.05rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--muted);font-size:1.2rem;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq details p{padding:0 0 20px;color:var(--muted);max-width:62ch}
+
+/* Owner */
+.owner{padding-block:72px;display:grid;gap:28px}
+.kpis{display:flex;gap:12px;flex-wrap:wrap}
+.kpi{min-width:150px;padding:14px 18px;border-radius:14px;border:1px solid var(--line);background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.kpi-v{font-family:var(--f-display);font-size:1.7rem;font-weight:700;font-variant-numeric:tabular-nums}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
+table.orders{width:100%;border-collapse:collapse;font-size:.93rem;min-width:640px}
+.orders th{text-align:left;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:12px 16px;border-bottom:1px solid var(--line)}
+.orders td{padding:13px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+.orders tr:last-child td{border-bottom:0}
+.orders .num{text-align:right;font-variant-numeric:tabular-nums}
+.orders tr.fresh td{background:var(--accent-soft)}
+.orders tr.fresh td:first-child::after{content:"new";margin-left:8px;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700}
+.gdot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--c);margin-right:8px;vertical-align:-1px;box-shadow:inset 0 0 0 1px var(--outline)}
+.pill{display:inline-block;font-size:.78rem;font-weight:600;padding:4px 9px;border-radius:999px}
+.pill-paid{background:var(--good-soft);color:var(--good)}
+.pill-ship{background:var(--info-soft);color:var(--info)}
+
+/* Footer */
+.foot{padding-block:48px 56px;border-top:1px solid var(--line)}
+.foot-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:32px}
+.foot p{color:var(--muted);font-size:.92rem;max-width:44ch;margin-top:8px}
+.stack-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px;font-size:.92rem}
+.stack-list li{display:flex;gap:10px}
+.stack-list li::before{content:"→";color:var(--accent);font-family:var(--f-mono)}
+
+/* Checkout dialog */
+dialog.co{border:0;padding:0;border-radius:22px;width:min(460px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;background:var(--surface);color:var(--ink);box-shadow:0 30px 80px -20px var(--shadow)}
+dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
+.co-step{padding:24px;display:flex;flex-direction:column;gap:18px}
+.co-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.co-head h2{font-size:1.4rem;font-weight:700}
+.x{appearance:none;border:0;background:var(--bg);color:var(--ink);width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer}
+.co-sum{display:grid;gap:10px;padding:16px;border-radius:14px;background:var(--bg);font-size:.95rem}
+.co-sum .row{display:flex;justify-content:space-between;gap:12px}
+.co-sum .row span:last-child{font-variant-numeric:tabular-nums}
+.co-sum .total{border-top:1px solid var(--line);padding-top:10px;font-weight:700;font-size:1.05rem}
+.pay-list{display:grid;gap:10px}
+.pay{appearance:none;width:100%;padding:15px;border-radius:12px;font:600 1rem/1 var(--f-body);cursor:pointer;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.pay:hover{border-color:var(--muted)}
+.pay-primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pay-primary:hover{opacity:.9}
+.demo-note{font-size:.84rem;color:var(--muted);padding:12px 14px;border-radius:12px;border:1px dashed var(--line)}
+.processing{align-items:center;text-align:center;padding-block:56px}
+.spinner{width:42px;height:42px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.done-mark{width:52px;height:52px;border-radius:50%;background:var(--good-soft);color:var(--good);display:grid;place-items:center}
+.mail{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.mail-h{display:grid;gap:4px;padding:12px 14px;background:var(--bg);font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+.mail-h b{color:var(--ink);font-weight:500}
+.mail-b{padding:14px;font-size:.93rem}
+.co-actions{display:flex;gap:10px;flex-wrap:wrap}
+.co-actions .btn{flex:1 1 auto}
+
+/* Mobile buy bar */
+.mbar{display:none}
+@media (max-width:860px){
+  .product{grid-template-columns:minmax(0,1fr);padding-block:20px 56px}
+  .buybox{position:static}
+  .mbar{display:block;position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  .mbar-in{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .mbar-in div{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+  .mbar-in span{font-size:.85rem;color:var(--muted)}
+  body{padding-bottom:84px}
+  .top .btn-sm{display:none}
+  .recipe{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .recipe div:nth-child(3){border-right:0}
+  .recipe div:nth-child(-n+3){border-bottom:1px solid var(--line)}
+  .pours{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:32px}
+  .pours::before{display:none}
+  .rev-grid{grid-template-columns:minmax(0,1fr)}
+  .faq,.foot-in{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:520px){
+  .recipe{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .recipe div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .recipe div:nth-child(2n){border-right:0}
+  .recipe div:nth-child(3){border-right:1px solid var(--line)}
+  .recipe div:nth-last-child(-n+2){border-bottom:0}
+  .pours{grid-template-columns:minmax(0,1fr)}
+  .stage-cap span:last-child{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .art .drop{animation:none;opacity:1}
+  .spinner{animation-duration:2.4s}
+  .btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top">stożek<span>.</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#brew">Brewing</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#faq">FAQ</a>
+      <a href="#orders">Owner view</a>
+    </nav>
+    <div class="top-end">
+      <a class="chip" href="#about-demo">Demo</a>
+      <button class="btn btn-sm" type="button" data-buy>Buy · <span data-subtotal>€46.00</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="wrap product" aria-labelledby="pTitle">
+    <div class="stage" data-glaze="celadon">
+      <div class="views" role="tablist" aria-label="Product view">
+        <button type="button" role="tab" id="tab-side" aria-selected="true" data-view-btn="side">Side</button>
+        <button type="button" role="tab" id="tab-top" aria-selected="false" data-view-btn="top">From above</button>
+      </div>
+
+      <svg class="art art-side" viewBox="0 0 400 420" role="img" aria-labelledby="sideTitle">
+        <title id="sideTitle">Stożek 02 dripper in Celadon glaze, side view</title>
+        <defs>
+          <linearGradient id="gBody" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" style="stop-color:var(--g3)"/>
+            <stop offset=".2" style="stop-color:var(--g1)"/>
+            <stop offset=".52" style="stop-color:var(--g2)"/>
+            <stop offset="1" style="stop-color:var(--g3)"/>
+          </linearGradient>
+          <linearGradient id="gRim" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" style="stop-color:var(--g2)"/>
+            <stop offset=".3" style="stop-color:var(--g1)"/>
+            <stop offset="1" style="stop-color:var(--g2)"/>
+          </linearGradient>
+          <clipPath id="clipCone"><path d="M68 112 Q88 216 162 296 L238 296 Q312 216 332 112 Z"/></clipPath>
+          <clipPath id="clipInner"><ellipse cx="200" cy="114" rx="117" ry="16"/></clipPath>
+        </defs>
+        <ellipse class="ground" cx="200" cy="398" rx="124" ry="9"/>
+        <path class="drop" d="M200 334c-5 8-6 12 0 15c6-3 5-7 0-15z"/>
+        <path class="handle" d="M318 150 C374 146 382 224 292 222"/>
+        <path class="base" d="M108 300h184v10c0 10-41 15-92 15s-92-5-92-15z"/>
+        <ellipse class="base-top" cx="200" cy="300" rx="92" ry="8"/>
+        <path class="body" d="M68 112 Q88 216 162 296 L238 296 Q312 216 332 112 Z" fill="url(#gBody)"/>
+        <g class="throw" clip-path="url(#clipCone)">
+          <path d="M40 160q160 18 320 0"/><path d="M40 206q160 15 320 0"/><path d="M40 250q160 11 320 0"/>
+        </g>
+        <g class="speck" id="speckSide" clip-path="url(#clipCone)"></g>
+        <ellipse class="rim" cx="200" cy="112" rx="133" ry="22" fill="url(#gRim)"/>
+        <ellipse class="inner" cx="200" cy="114" rx="117" ry="16"/>
+        <g class="ribs-in" clip-path="url(#clipInner)">
+          <path d="M104 108q50 4 80 20"/><path d="M150 100q40 8 56 30"/><path d="M214 98q14 14 4 32"/><path d="M262 102q-14 16-40 28"/><path d="M302 112q-36 10-74 18"/>
+        </g>
+      </svg>
+
+      <svg class="art art-top" viewBox="0 0 400 420" role="img" aria-labelledby="topTitle" hidden>
+        <title id="topTitle">Stożek 02 dripper in Celadon glaze, seen from above</title>
+        <defs>
+          <radialGradient id="gCone" cx=".5" cy=".5" r=".5">
+            <stop offset="0" style="stop-color:var(--g-in)"/>
+            <stop offset=".8" style="stop-color:var(--g2)"/>
+            <stop offset="1" style="stop-color:var(--g1)"/>
+          </radialGradient>
+          <clipPath id="clipTop"><circle cx="200" cy="205" r="140"/></clipPath>
+        </defs>
+        <circle class="ground" cx="208" cy="216" r="160"/>
+        <rect class="handle-top" x="324" y="178" width="66" height="54" rx="26"/>
+        <rect class="handle-gap" x="352" y="194" width="22" height="22" rx="11"/>
+        <circle class="rim-top" cx="200" cy="205" r="156" style="fill:var(--g1)"/>
+        <circle cx="200" cy="205" r="140" fill="url(#gCone)"/>
+        <g class="ribs-top" id="ribsTop" clip-path="url(#clipTop)"></g>
+        <g class="speck" id="speckTop" clip-path="url(#clipTop)"></g>
+        <circle class="hole" cx="200" cy="205" r="15"/>
+      </svg>
+
+      <p class="stage-cap"><span>No. 02 · wheel-thrown porcelain</span><span>Rim Ø 13.2 cm</span></p>
+    </div>
+
+    <div class="buybox">
+      <p class="eyebrow">Handmade pour-over · Wrocław</p>
+      <h1 id="pTitle">Stożek 02 Dripper</h1>
+      <p class="rating"><span class="stars" aria-hidden="true">★★★★★</span><strong>4.8</strong><span>· 126 reviews</span><span class="sample">(sample data)</span></p>
+      <p class="lede">A porcelain cone with spiral ribs that hold the paper off the wall. Water drains evenly, so the cup comes out sweet and clear, every morning.</p>
+      <div class="price-row"><span class="price">€46</span><span class="note">incl. VAT</span></div>
+
+      <fieldset class="glazes">
+        <legend class="label">Glaze <span class="label-val" data-glaze-name>Celadon</span></legend>
+        <div class="swatches">
+          <label class="sw"><input type="radio" name="glaze" id="gz-celadon" value="celadon" checked><span class="dot dot-celadon"></span>Celadon</label>
+          <label class="sw"><input type="radio" name="glaze" id="gz-oat" value="oat"><span class="dot dot-oat"></span>Oat</label>
+          <label class="sw"><input type="radio" name="glaze" id="gz-charcoal" value="charcoal"><span class="dot dot-charcoal"></span>Charcoal</label>
+        </div>
+      </fieldset>
+
+      <div class="qty-row">
+        <span class="label" id="qtyLabel">Quantity</span>
+        <div class="stepper" role="group" aria-labelledby="qtyLabel">
+          <button type="button" id="qMinus" aria-label="One less">−</button>
+          <output id="qty" aria-live="polite">1</output>
+          <button type="button" id="qPlus" aria-label="One more">+</button>
+        </div>
+      </div>
+
+      <button class="btn btn-lg" type="button" data-buy>Buy now · <span data-subtotal>€46.00</span></button>
+      <p class="ship-note" id="shipNote">+ €6.90 EU shipping. Add one more and shipping is free.</p>
+      <div class="paywith" aria-label="Accepted payments"><span>Card</span><span>Apple Pay</span><span>Google Pay</span><span>BLIK</span></div>
+
+      <ul class="assure">
+        <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Paid before 13:00, ships the same day</li>
+        <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free EU shipping from €60</li>
+        <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>30-day returns, full refund</li>
+      </ul>
+
+      <dl class="specs">
+        <dt>Material</dt><dd>Porcelain, fired at 1280 °C</dd>
+        <dt>Size</dt><dd>Rim Ø 13.2 cm · height 9.4 cm</dd>
+        <dt>Weight</dt><dd>290 g</dd>
+        <dt>Filters</dt><dd>Any #02 cone filter</dd>
+        <dt>Fits</dt><dd>Cups and carafes 7–11 cm wide</dd>
+      </dl>
+    </div>
+  </section>
+
+  <div class="band" id="brew">
+    <section class="wrap brew" aria-labelledby="brewTitle">
+      <div class="sec-head">
+        <h2 id="brewTitle">The recipe printed inside the box</h2>
+        <p>Start here, then adjust the grind. Go finer if the cup tastes sour, coarser if it tastes harsh.</p>
+      </div>
+      <dl class="recipe">
+        <div><dt>Coffee</dt><dd>15<small>g</small></dd></div>
+        <div><dt>Water</dt><dd>250<small>g</small></dd></div>
+        <div><dt>Ratio</dt><dd>1:16.7</dd></div>
+        <div><dt>Water temp</dt><dd>94<small>°C</small></dd></div>
+        <div><dt>Grind</dt><dd>Med-fine</dd></div>
+        <div><dt>Total time</dt><dd>3:30</dd></div>
+      </dl>
+      <ol class="pours">
+        <li><time>0:00</time><h3>Bloom</h3><p class="grams">→ 40 g</p><p>Wet all the grounds, swirl once, and let the gas escape.</p></li>
+        <li><time>0:35</time><h3>First pour</h3><p class="grams">→ 150 g</p><p>Slow circles from the centre out. Stay off the paper.</p></li>
+        <li><time>1:15</time><h3>Second pour</h3><p class="grams">→ 250 g</p><p>Keep the water level steady and the bed flat.</p></li>
+        <li><time>2:45</time><h3>Drawdown</h3><p class="grams">done by 3:30</p><p>The ribs keep the flow even, so it finishes on time.</p></li>
+      </ol>
+    </section>
+  </div>
+
+  <section class="wrap reviews" id="reviews" aria-labelledby="revTitle">
+    <div class="sec-head">
+      <h2 id="revTitle">What people brew with it</h2>
+      <p class="note">Sample reviews written for this demo.</p>
+    </div>
+    <div class="rev-grid">
+      <figure class="rev">
+        <span class="stars" aria-label="5 out of 5">★★★★★</span>
+        <blockquote>“I switched from a plastic cone and the drawdown is what changed. It finishes around 3:20 every morning, so now I can tell what the grind is doing.”</blockquote>
+        <figcaption><strong>Ola</strong> · Kraków · Celadon</figcaption>
+      </figure>
+      <figure class="rev">
+        <span class="stars" aria-label="5 out of 5">★★★★★</span>
+        <blockquote>“Heavy enough that it doesn’t tip on a narrow mug, and it goes straight in the dishwasher. The charcoal glaze looks better in person.”</blockquote>
+        <figcaption><strong>James</strong> · Leeds · Charcoal</figcaption>
+      </figure>
+      <figure class="rev">
+        <span class="stars" aria-label="4 out of 5">★★★★☆</span>
+        <blockquote>“Bought two, one for the office. The recipe card got my colleagues brewing within a day. Wish it came with a few filters.”</blockquote>
+        <figcaption><strong>Nina</strong> · Berlin · Oat</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap faq" id="faq" aria-labelledby="faqTitle">
+    <h2 id="faqTitle">Before you order</h2>
+    <div class="faq-list">
+      <details open><summary>Which filters fit?</summary><p>Any #02 cone filter, paper or cloth. A pack of 40 costs about €4 in most supermarkets and coffee shops.</p></details>
+      <details><summary>Is it dishwasher safe?</summary><p>Yes. The glaze is food safe and fired at 1280 °C, so it won’t craze or absorb coffee oils.</p></details>
+      <details><summary>How fast will it arrive?</summary><p>Orders paid before 13:00 leave Wrocław the same day. EU delivery takes 2–4 business days and you get a tracking link by email.</p></details>
+      <details><summary>Can I return it?</summary><p>Within 30 days of delivery, used or not, as long as it isn’t chipped. Send it back in the original box and we refund the full price.</p></details>
+    </div>
+  </section>
+
+  <div class="band" id="orders">
+    <section class="wrap owner" aria-labelledby="ownTitle">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Owner view</p>
+          <h2 id="ownTitle">Every paid order, in one table</h2>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><span class="label">Orders · 3 days</span><span class="kpi-v" id="kOrders">4</span></div>
+          <div class="kpi"><span class="label">Revenue · 3 days</span><span class="kpi-v" id="kRev">€335.80</span></div>
+        </div>
+      </div>
+      <p class="note">Orders land here and in a Google Sheet as soon as checkout completes, and the buyer gets a confirmation email automatically. The rows below are sample data. Place a demo order above and it appears at the top.</p>
+      <div class="table-wrap">
+        <table class="orders">
+          <thead><tr><th>Order</th><th>Placed</th><th>Glaze</th><th class="num">Qty</th><th class="num">Total</th><th>Paid with</th><th>Status</th></tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="foot" id="about-demo">
+  <div class="wrap foot-in">
+    <div>
+      <span class="brand">stożek<span>.</span></span>
+      <p>This is a demo landing page. The brand, product, reviews and orders are samples, and no real payment is taken.</p>
+    </div>
+    <div>
+      <p class="label">How this page works</p>
+      <ul class="stack-list">
+        <li>One static page: HTML, CSS and vanilla JS, no framework to maintain.</li>
+        <li>Buy button opens Stripe Checkout with card, Apple Pay, Google Pay and BLIK.</li>
+        <li>Paid order goes through an n8n webhook to a Google Sheet and a confirmation email.</li>
+        <li>Texts, prices and photos live in one config block, so the owner can edit them.</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="mbar" aria-label="Quick buy">
+  <div class="wrap mbar-in">
+    <div><strong>Stożek 02</strong><span data-glaze-name>Celadon</span></div>
+    <button class="btn" type="button" data-buy>Buy · <span data-subtotal>€46.00</span></button>
+  </div>
+</div>
+
+<dialog class="co" id="checkout" aria-labelledby="coTitle">
+  <div class="co-step" data-step="pay">
+    <div class="co-head"><h2 id="coTitle">Checkout</h2><button class="x" type="button" data-close aria-label="Close checkout">×</button></div>
+    <div class="co-sum">
+      <div class="row"><span id="coItem">Stożek 02 · Celadon × 1</span><span id="coSub">€46.00</span></div>
+      <div class="row"><span>EU shipping</span><span id="coShip">€6.90</span></div>
+      <div class="row total"><span>Total</span><span id="coTotal">€52.90</span></div>
+    </div>
+    <div class="pay-list">
+      <button class="pay pay-primary" type="button" data-method="Apple Pay">Pay with Apple Pay</button>
+      <button class="pay" type="button" data-method="Google Pay">Pay with Google Pay</button>
+      <button class="pay" type="button" data-method="Card">Pay by card</button>
+    </div>
+    <p class="demo-note">Demo mode: nothing is charged and no card details are asked for. On a live site this step is Stripe Checkout.</p>
+  </div>
+  <div class="co-step processing" data-step="processing" hidden>
+    <div class="spinner" aria-hidden="true"></div>
+    <p><strong>Confirming payment…</strong></p>
+    <p class="note">Usually 1–2 seconds.</p>
+  </div>
+  <div class="co-step" data-step="done" hidden>
+    <div class="co-head">
+      <div class="done-mark" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <button class="x" type="button" data-close aria-label="Close">×</button>
+    </div>
+    <div>
+      <h2>Order <span class="mono" id="doneId">ST-10484</span> is paid</h2>
+      <p class="note" id="doneMeta">Apple Pay · €52.90</p>
+    </div>
+    <div class="mail" aria-label="Confirmation email preview">
+      <div class="mail-h">
+        <span>From <b>Stożek &lt;orders@stozek.example&gt;</b></span>
+        <span>Subject <b id="mailSubj">Your Stożek order ST-10484</b></span>
+      </div>
+      <p class="mail-b" id="mailBody">Thanks for your order. Your Celadon dripper ships from Wrocław within 2 business days, and we’ll email the tracking link.</p>
+    </div>
+    <div class="co-actions">
+      <button class="btn" type="button" id="seeOrder">See it in the owner view</button>
+      <button class="btn-ghost" type="button" data-close>Done</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const PRICE = 46, SHIP = 6.9, FREE_FROM = 60, MAX_QTY = 5;
+  const GLAZES = {
+    celadon: { name: 'Celadon', c: '#93BDB2' },
+    oat: { name: 'Oat', c: '#D6C5A6' },
+    charcoal: { name: 'Charcoal', c: '#454A50' }
+  };
+  const state = { glaze: 'celadon', qty: 1 };
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const eur = n => '€' + n.toFixed(2);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS = 'http://www.w3.org/2000/svg';
+  const stage = $('.stage');
+
+  // Glaze speckles and ribs, seeded so they look the same on every visit
+  function rng(seed) {
+    return () => {
+      seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function dot(g, x, y, r) {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', r.toFixed(2));
+    g.appendChild(c);
+  }
+  const r1 = rng(11), side = $('#speckSide');
+  for (let i = 0; i < 90; i++) dot(side, 70 + r1() * 260, 116 + r1() * 180, 0.7 + r1() * 1.6);
+  const r2 = rng(23), top = $('#speckTop');
+  for (let i = 0; i < 110; i++) {
+    const a = r2() * Math.PI * 2, rr = Math.sqrt(r2()) * 140;
+    dot(top, 200 + Math.cos(a) * rr, 205 + Math.sin(a) * rr, 0.7 + r2() * 1.6);
+  }
+  const ribs = $('#ribsTop');
+  const pt = (r, a) => (200 + Math.cos(a) * r).toFixed(1) + ' ' + (205 + Math.sin(a) * r).toFixed(1);
+  for (let i = 0; i < 14; i++) {
+    const a = i * Math.PI * 2 / 14, p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', `M${pt(24, a)} Q${pt(86, a + 0.38)} ${pt(138, a + 0.8)}`);
+    ribs.appendChild(p);
+  }
+
+  // Glaze + view
+  function setGlaze(k) {
+    state.glaze = k;
+    stage.dataset.glaze = k;
+    $$('[data-glaze-name]').forEach(e => { e.textContent = GLAZES[k].name; });
+    $('#sideTitle').textContent = `Stożek 02 dripper in ${GLAZES[k].name} glaze, side view`;
+    $('#topTitle').textContent = `Stożek 02 dripper in ${GLAZES[k].name} glaze, seen from above`;
+  }
+  $$('input[name="glaze"]').forEach(i => i.addEventListener('change', () => setGlaze(i.value)));
+  $$('[data-view-btn]').forEach(b => b.addEventListener('click', () => {
+    const v = b.dataset.viewBtn;
+    $$('[data-view-btn]').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+    $('.art-side').toggleAttribute('hidden', v !== 'side');
+    $('.art-top').toggleAttribute('hidden', v !== 'top');
+  }));
+
+  // Quantity + totals
+  function totals() {
+    const sub = PRICE * state.qty, ship = sub >= FREE_FROM ? 0 : SHIP;
+    return { sub, ship, total: sub + ship };
+  }
+  function render() {
+    const t = totals();
+    $('#qty').textContent = state.qty;
+    $$('[data-subtotal]').forEach(e => { e.textContent = eur(t.sub); });
+    $('#shipNote').textContent = t.ship
+      ? `+ ${eur(SHIP)} EU shipping. Add one more and shipping is free.`
+      : 'Free EU shipping included.';
+    $('#qMinus').disabled = state.qty <= 1;
+    $('#qPlus').disabled = state.qty >= MAX_QTY;
+  }
+  $('#qMinus').addEventListener('click', () => { state.qty = Math.max(1, state.qty - 1); render(); });
+  $('#qPlus').addEventListener('click', () => { state.qty = Math.min(MAX_QTY, state.qty + 1); render(); });
+
+  // Owner table
+  const orders = [
+    { id: 'ST-10483', when: 'Today 09:12', glaze: 'Oat', qty: 2, total: 92, method: 'Apple Pay', status: 'Paid' },
+    { id: 'ST-10482', when: 'Yesterday 18:40', glaze: 'Celadon', qty: 1, total: 52.9, method: 'Card', status: 'Shipped' },
+    { id: 'ST-10481', when: 'Yesterday 11:05', glaze: 'Charcoal', qty: 1, total: 52.9, method: 'BLIK', status: 'Shipped' },
+    { id: 'ST-10480', when: '2 days ago', glaze: 'Celadon', qty: 3, total: 138, method: 'Google Pay', status: 'Shipped' }
+  ];
+  const colorFor = name => (Object.values(GLAZES).find(g => g.name === name) || {}).c;
+  function renderOrders() {
+    $('#ordersBody').innerHTML = orders.map(o => `
+      <tr class="${o.fresh ? 'fresh' : ''}">
+        <td class="mono">${o.id}</td><td>${o.when}</td>
+        <td><span class="gdot" style="--c:${colorFor(o.glaze)}"></span>${o.glaze}</td>
+        <td class="num">${o.qty}</td><td class="num">${eur(o.total)}</td><td>${o.method}</td>
+        <td><span class="pill ${o.status === 'Paid' ? 'pill-paid' : 'pill-ship'}">${o.status}</span></td>
+      </tr>`).join('');
+    $('#kOrders').textContent = orders.length;
+    $('#kRev').textContent = eur(orders.reduce((s, o) => s + o.total, 0));
+  }
+  renderOrders();
+
+  // Checkout (demo)
+  const dlg = $('#checkout');
+  let orderNo = 10483, timer = null;
+  const showStep = s => $$('.co-step', dlg).forEach(x => { x.hidden = x.dataset.step !== s; });
+  function openCheckout() {
+    const t = totals();
+    $('#coItem').textContent = `Stożek 02 · ${GLAZES[state.glaze].name} × ${state.qty}`;
+    $('#coSub').textContent = eur(t.sub);
+    $('#coShip').textContent = t.ship ? eur(t.ship) : 'Free';
+    $('#coTotal').textContent = eur(t.total);
+    showStep('pay');
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  }
+  function closeCheckout() {
+    clearTimeout(timer);
+    if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open');
+  }
+  $$('[data-buy]').forEach(b => b.addEventListener('click', openCheckout));
+  $$('[data-close]', dlg).forEach(b => b.addEventListener('click', closeCheckout));
+  dlg.addEventListener('click', e => { if (e.target === dlg) closeCheckout(); });
+  $$('[data-method]', dlg).forEach(b => b.addEventListener('click', () => {
+    showStep('processing');
+    timer = setTimeout(() => complete(b.dataset.method), 1300);
+  }));
+  function complete(method) {
+    const t = totals(), g = GLAZES[state.glaze].name, id = 'ST-' + (++orderNo);
+    $('#doneId').textContent = id;
+    $('#doneMeta').textContent = `${method} · ${eur(t.total)}`;
+    $('#mailSubj').textContent = `Your Stożek order ${id}`;
+    $('#mailBody').textContent = `Thanks for your order. Your ${g} dripper${state.qty > 1 ? 's' : ''} (×${state.qty}) ship${state.qty > 1 ? '' : 's'} from Wrocław within 2 business days, and we’ll email the tracking link.`;
+    orders.forEach(o => { o.fresh = false; });
+    orders.unshift({ id, when: 'Just now', glaze: g, qty: state.qty, total: t.total, method, status: 'Paid', fresh: true });
+    renderOrders();
+    showStep('done');
+    $('#seeOrder').focus();
+  }
+  $('#seeOrder').addEventListener('click', () => {
+    closeCheckout();
+    $('#orders').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

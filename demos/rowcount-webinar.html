@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rowcount SQL Webinar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Free live webinar: write your first SQL query in 60 minutes. Thursday 3 December 2026, 19:00 CET.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Layout: grid-paper hero with the promise left and the sign-up form right (above the fold) → spreadsheet-vs-SQL demo band → timed agenda → audience → 6-week course → sample proof → FAQ → closing CTA band. */
+:root{
+  --bg:#F4F6F1; --surface:#FFFFFF; --soft:#E6EEE8; --ink:#13201A; --muted:#536059; --line:#D4DCD6;
+  --accent:#0C7452; --accent-hover:#095C41; --accent-ink:#FFFFFF;
+  --mark:#F3D747; --mark-ink:#13201A; --hl-top:58%;
+  --code-bg:#13201A; --code-ink:#DAE6DF; --code-kw:#86D9B4; --code-str:#F3D747; --code-num:#F2A36B; --code-dim:#7B8C84; --code-line:rgba(218,230,223,.12);
+  --danger:#B42318; --grid:rgba(19,32,26,.065); --card-shadow:rgba(19,32,26,.28);
+  --f-display:"Archivo","Public Sans",system-ui,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1311; --surface:#141C18; --soft:#1A2520; --ink:#E3EBE6; --muted:#96A49D; --line:#25302A;
+    --accent:#4FC597; --accent-hover:#6DD4AC; --accent-ink:#04130C;
+    --mark:#E3C63F; --mark-ink:#13201A; --hl-top:84%;
+    --code-bg:#08100C; --code-ink:#D2DFD8; --code-kw:#7FD3AE; --code-str:#E3C63F; --code-num:#EFA06F; --code-dim:#6C7D75; --code-line:rgba(210,223,216,.10);
+    --danger:#FF8F84; --grid:rgba(227,235,230,.045); --card-shadow:rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1311; --surface:#141C18; --soft:#1A2520; --ink:#E3EBE6; --muted:#96A49D; --line:#25302A;
+  --accent:#4FC597; --accent-hover:#6DD4AC; --accent-ink:#04130C;
+  --mark:#E3C63F; --mark-ink:#13201A; --hl-top:84%;
+  --code-bg:#08100C; --code-ink:#D2DFD8; --code-kw:#7FD3AE; --code-str:#E3C63F; --code-num:#EFA06F; --code-dim:#6C7D75; --code-line:rgba(210,223,216,.10);
+  --danger:#FF8F84; --grid:rgba(227,235,230,.045); --card-shadow:rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.label{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.sample{font-size:.8rem;color:var(--muted)}
+.hl{background:linear-gradient(180deg,transparent var(--hl-top),var(--mark) var(--hl-top) 94%,transparent 94%);padding:0 .06em;color:inherit}
+.sec-title{font-size:clamp(1.9rem,3.6vw,2.8rem);line-height:1.02;font-weight:820;font-variation-settings:"wdth" 112;letter-spacing:-.02em}
+
+/* Buttons */
+.btn{appearance:none;border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);font:700 1.02rem/1 var(--f-body);padding:16px 22px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;transition:background .15s ease}
+.btn:hover{background:var(--accent-hover)}
+.btn-block{width:100%}
+.btn-ghost{appearance:none;background:transparent;color:var(--ink);border:1.5px solid var(--line);border-radius:10px;font:600 .92rem/1 var(--f-body);padding:11px 14px;cursor:pointer}
+.btn-ghost:hover{border-color:var(--muted)}
+.linkbtn{appearance:none;background:none;border:0;padding:0;color:var(--accent);font:600 .95rem var(--f-body);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+/* Hero */
+.hero{margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;border-bottom:1px solid var(--line)}
+.topline{display:flex;align-items:center;gap:14px;padding-block:20px}
+.logo{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:850;font-variation-settings:"wdth" 118;font-size:1.25rem;letter-spacing:-.01em;text-decoration:none}
+.logo i{display:grid;grid-template-columns:repeat(3,6px);gap:2px}
+.logo i b{display:block;height:6px;background:var(--ink);border-radius:1px}
+.logo i b:nth-child(5){background:var(--accent)}
+.chip{margin-left:auto;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px dashed var(--muted);color:var(--muted);text-decoration:none}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr);gap:clamp(28px,5vw,72px);align-items:start;padding-block:28px 72px}
+.hero-copy{display:flex;flex-direction:column;gap:24px;min-width:0}
+.kicker{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;font-weight:600;font-size:.92rem;padding:7px 12px 7px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.kicker b{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:4px 7px;border-radius:999px}
+.hero h1{font-size:clamp(2.7rem,6.4vw,5.1rem);line-height:.94;font-weight:880;font-variation-settings:"wdth" 120;letter-spacing:-.035em}
+.lede{font-size:1.16rem;color:var(--muted);max-width:54ch}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.facts div{padding:14px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px;min-width:0}
+.facts div:last-child{border-right:0}
+.facts dd{margin:0;font-weight:700;font-size:1rem}
+.countdown{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cd{display:flex;gap:8px}
+.cd div{display:flex;flex-direction:column;align-items:center;min-width:62px;padding:10px 8px;border-radius:10px;background:var(--ink);color:var(--bg)}
+.cd span{font-family:var(--f-mono);font-weight:700;font-size:1.5rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.cd small{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+
+/* Form card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 24px 50px -30px var(--card-shadow);display:flex;flex-direction:column;gap:18px;min-width:0}
+.card form{display:flex;flex-direction:column;gap:16px}
+.card-title{font-size:1.6rem;font-weight:820;font-variation-settings:"wdth" 110;line-height:1.05}
+.card-sub{color:var(--muted);font-size:.95rem;margin-top:-10px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label{font-weight:600;font-size:.92rem}
+.field input,.field select{font:500 1rem var(--f-body);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:13px 14px;width:100%;min-width:0}
+.field input::placeholder{color:var(--muted);opacity:.7}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.field input[aria-invalid="true"]{border-color:var(--danger)}
+.phone{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px}
+.phone select{width:auto;padding-right:8px}
+.check{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;font-size:.9rem;color:var(--muted);cursor:pointer}
+.check input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--accent)}
+.check input[aria-invalid="true"]{outline:2px solid var(--danger);outline-offset:2px}
+.err{color:var(--danger);font-size:.86rem;font-weight:500}
+.seats{display:flex;flex-direction:column;gap:8px;font-size:.9rem}
+.bar{height:8px;border-radius:999px;background:var(--soft);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .5s ease}
+.fine{font-size:.82rem;color:var(--muted)}
+.done{display:flex;flex-direction:column;gap:16px}
+.done:focus{outline:none}
+.done-mark{width:48px;height:48px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.cal{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.cal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cal p.mono{font-size:.86rem;user-select:all}
+.copied{font-size:.85rem;color:var(--accent);font-weight:600}
+.log{padding:14px;border-radius:12px;background:var(--code-bg);color:var(--code-ink);display:flex;flex-direction:column;gap:10px}
+.log .label{color:var(--code-dim)}
+.log ol{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-family:var(--f-mono);font-size:.78rem;line-height:1.45}
+.log li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;animation:rise .3s ease both}
+.log time{color:var(--code-dim)}
+.log b{color:var(--code-kw);font-weight:500}
+@keyframes rise{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* Query demo */
+.demo{padding-block:80px;display:grid;gap:32px}
+.demo-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 48px;flex-wrap:wrap}
+.demo-head p{max-width:48ch;color:var(--muted)}
+.demo-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:20px;align-items:start}
+.panel-cap{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.sheet{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden;min-width:0}
+.fxbar{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.76rem}
+.fxbar .ref{padding:3px 8px;border:1px solid var(--line);border-radius:6px;color:var(--muted)}
+.fxbar .fx{font-style:italic;color:var(--muted)}
+.fxbar .formula{white-space:nowrap;overflow-x:auto}
+.scroll-x{overflow-x:auto}
+table.grid{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+.grid th{background:var(--soft);color:var(--muted);font:500 .72rem var(--f-mono);padding:6px 10px;border:1px solid var(--line);text-align:center}
+.grid td{padding:9px 12px;border:1px solid var(--line);white-space:nowrap;transition:background .25s ease,color .25s ease}
+.grid tr.hdr td{font-weight:700;font-family:var(--f-mono);font-size:.8rem}
+.grid .num{text-align:right}
+.grid tr.out td{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--danger)}
+.grid tr.hit td{background:color-mix(in srgb,var(--mark) 30%,transparent)}
+.grid th:first-child{width:36px}
+.sheet-note{padding:10px 12px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
+.sql{border-radius:14px;background:var(--code-bg);color:var(--code-ink);overflow:hidden;min-width:0}
+.sql-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--code-line)}
+.sql-bar .tab{font-family:var(--f-mono);font-size:.78rem;color:var(--code-ink)}
+.run{appearance:none;border:0;border-radius:8px;background:var(--code-kw);color:var(--code-bg);font:700 .85rem/1 var(--f-mono);padding:9px 12px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.run:hover{filter:brightness(1.08)}
+pre.code{margin:0;padding:18px 16px;font:500 .9rem/1.7 var(--f-mono);overflow-x:auto;counter-reset:ln}
+pre.code .ln{display:block}
+pre.code .ln::before{counter-increment:ln;content:counter(ln);display:inline-block;width:1.8em;margin-right:14px;color:var(--code-dim);text-align:right}
+.kw{color:var(--code-kw);font-weight:700}
+.str{color:var(--code-str)}
+.fn{color:var(--code-num)}
+.result{border-top:1px solid var(--code-line);padding:14px 16px 16px}
+.result .label{color:var(--code-dim);margin-bottom:10px;display:block}
+table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font-variant-numeric:tabular-nums}
+.res th{text-align:left;color:var(--code-dim);font-weight:500;padding:6px 10px;border-bottom:1px solid var(--code-line)}
+.res td{padding:8px 10px;border-bottom:1px solid var(--code-line)}
+.res tr:last-child td{border-bottom:0}
+.res .num{text-align:right}
+.res tbody tr{animation:rise .3s ease both}
+
+/* Agenda */
+.agenda{padding-block:80px;display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:32px 72px;align-items:start;border-top:1px solid var(--line)}
+.agenda-side{display:flex;flex-direction:column;gap:16px;position:sticky;top:24px}
+.agenda-side p{color:var(--muted);max-width:40ch}
+.steps{list-style:none;margin:0;padding:0;display:grid}
+.steps li{display:grid;grid-template-columns:88px minmax(0,1fr);gap:20px;padding:22px 0;border-top:1px solid var(--line)}
+.steps li:last-child{border-bottom:1px solid var(--line)}
+.steps time{font-family:var(--f-mono);font-weight:700;font-size:1.05rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.steps h3{font-size:1.25rem;font-weight:780;font-variation-settings:"wdth" 108;margin-bottom:6px}
+.steps p{color:var(--muted)}
+
+/* Audience */
+.band{background:var(--surface);border-block:1px solid var(--line)}
+.who{padding-block:72px;display:grid;gap:28px}
+.who-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.who-item{padding:22px;border-radius:16px;background:var(--bg);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.who-item code{font:600 .82rem var(--f-mono);align-self:flex-start;padding:4px 8px;border-radius:6px;background:var(--soft);color:var(--ink)}
+.who-item h3{font-size:1.15rem;font-weight:760;font-variation-settings:"wdth" 106}
+.who-item p{color:var(--muted);font-size:.95rem}
+
+/* Course */
+.course{padding-block:80px;display:grid;gap:28px}
+.course-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 48px;flex-wrap:wrap}
+.course-head p{max-width:46ch;color:var(--muted)}
+.weeks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)}
+.weeks li{padding:22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px;min-width:0}
+.weeks li:nth-child(3n){border-right:0}
+.weeks li:nth-last-child(-n+3){border-bottom:0}
+.weeks h3{font-size:1.12rem;font-weight:760;font-variation-settings:"wdth" 106}
+.weeks p{color:var(--muted);font-size:.94rem}
+.weeks .label{color:var(--accent)}
+
+/* Proof */
+.proof{padding-block:0 80px;display:grid;gap:24px}
+.quotes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.quote{margin:0;padding:26px;border-radius:18px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;gap:16px}
+.quote blockquote{margin:0;font-size:1.12rem;line-height:1.5}
+.quote figcaption{color:var(--muted);font-size:.92rem;margin-top:auto}
+.quote figcaption strong{color:var(--ink)}
+
+/* FAQ */
+.faq{padding-block:0 88px;display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:28px 72px;align-items:start}
+.faq-list{border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;padding:18px 0;font-weight:700;font-size:1.04rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--muted);font-size:1.2rem;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq details p{padding:0 0 20px;color:var(--muted);max-width:62ch}
+
+/* Final CTA */
+.final{background:var(--ink);color:var(--bg)}
+.final-in{padding-block:64px;display:flex;justify-content:space-between;align-items:center;gap:24px 48px;flex-wrap:wrap}
+.final h2{font-size:clamp(2rem,4.4vw,3.4rem);line-height:.98;font-weight:880;font-variation-settings:"wdth" 120;letter-spacing:-.03em}
+.final p{opacity:.75;margin-top:10px;font-size:1.05rem}
+.btn-mark{background:var(--mark);color:var(--mark-ink)}
+.btn-mark:hover{background:var(--mark);filter:brightness(1.05)}
+
+/* Footer */
+.foot{padding-block:40px 48px}
+.foot-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px}
+.foot p{color:var(--muted);font-size:.92rem;max-width:46ch;margin-top:8px}
+.stack-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px;font-size:.92rem}
+.stack-list li{display:flex;gap:10px}
+.stack-list li::before{content:"→";color:var(--accent);font-family:var(--f-mono)}
+
+@media (max-width:900px){
+  .hero-grid,.demo-grid,.agenda,.faq,.foot-in{grid-template-columns:minmax(0,1fr)}
+  .agenda-side{position:static}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts div:nth-child(2){border-right:0}
+  .facts div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .who-grid{grid-template-columns:minmax(0,1fr)}
+  .weeks{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .weeks li:nth-child(3n){border-right:1px solid var(--line)}
+  .weeks li:nth-child(2n){border-right:0}
+  .weeks li:nth-last-child(-n+3){border-bottom:1px solid var(--line)}
+  .weeks li:nth-last-child(-n+2){border-bottom:0}
+  .quotes{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:520px){
+  .card{padding:20px}
+  .cd div{min-width:54px}
+  .steps li{grid-template-columns:minmax(0,1fr);gap:6px}
+  .weeks{grid-template-columns:minmax(0,1fr)}
+  .weeks li{border-right:0!important;border-bottom:1px solid var(--line)!important}
+  .weeks li:last-child{border-bottom:0!important}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .log li,.res tbody tr{animation:none}
+  .grid td,.bar span,.btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topline">
+      <a class="logo" href="#register" aria-label="Rowcount"><i aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b></i>rowcount</a>
+      <a class="chip" href="#about-demo">Demo</a>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="kicker"><b>Free</b>Live webinar for spreadsheet people</span>
+        <h1>Swap your VLOOKUPs for <span class="hl">SQL</span> in one evening</h1>
+        <p class="lede">A live, beginner-level hour for people who build reports in Excel or Google Sheets. You’ll run real queries on a sample sales table and leave knowing what the 6-week course covers.</p>
+        <dl class="facts">
+          <div><dt class="label">Date</dt><dd>Thu, 3 Dec 2026</dd></div>
+          <div><dt class="label">Time</dt><dd>19:00 CET</dd></div>
+          <div><dt class="label">Length</dt><dd>60 min + Q&amp;A</dd></div>
+          <div><dt class="label">Where</dt><dd>Online, in browser</dd></div>
+        </dl>
+        <div class="countdown" id="countdown">
+          <span class="label" id="cdLabel">Starts in</span>
+          <div class="cd" aria-label="Time until the webinar starts">
+            <div><span id="cdD">13</span><small>days</small></div>
+            <div><span id="cdH">04</span><small>hrs</small></div>
+            <div><span id="cdM">00</span><small>min</small></div>
+            <div><span id="cdS">00</span><small>sec</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="register">
+        <form id="regForm" novalidate>
+          <h2 class="card-title">Save your free seat</h2>
+          <p class="card-sub">The join link and the replay come by email.</p>
+          <div class="field">
+            <label for="f-name">First name</label>
+            <input id="f-name" name="name" autocomplete="given-name" placeholder="Anna" aria-describedby="e-name">
+            <p class="err" id="e-name" hidden></p>
+          </div>
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="anna@example.com" aria-describedby="e-email">
+            <p class="err" id="e-email" hidden></p>
+          </div>
+          <div class="field">
+            <label for="f-phone">Mobile, for one SMS reminder</label>
+            <div class="phone">
+              <select id="f-cc" name="cc" aria-label="Country code">
+                <option value="+48">PL +48</option>
+                <option value="+44">UK +44</option>
+                <option value="+49">DE +49</option>
+                <option value="+380">UA +380</option>
+                <option value="+1">US +1</option>
+              </select>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel-national" inputmode="tel" placeholder="512 345 678" aria-describedby="e-phone">
+            </div>
+            <p class="err" id="e-phone" hidden></p>
+          </div>
+          <label class="check" for="f-consent">
+            <input type="checkbox" id="f-consent" name="consent" aria-describedby="e-consent">
+            <span>Email me the join link, the replay and one reminder. I can unsubscribe at any time.</span>
+          </label>
+          <p class="err" id="e-consent" hidden></p>
+          <button class="btn btn-block" type="submit">Save my seat</button>
+          <div class="seats">
+            <div class="bar" aria-hidden="true"><span id="seatBar" style="width:63.6%"></span></div>
+            <p><strong id="seatCount">318</strong> of 500 seats taken <span class="sample">(sample)</span></p>
+          </div>
+          <p class="fine">Your details go to our mailing list only. No sales calls.</p>
+        </form>
+
+        <div class="done" id="regDone" tabindex="-1" hidden>
+          <div class="done-mark" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h2 class="card-title">You’re in, <span id="dName">Anna</span>.</h2>
+          <p class="muted">The join link is on its way to <strong id="dEmail">anna@example.com</strong>. Check spam if it isn’t there in 5 minutes.</p>
+          <div class="cal">
+            <span class="label">Add to your calendar</span>
+            <p class="mono" id="calText">Rowcount SQL webinar · Thu 3 Dec 2026 · 19:00–20:00 CET</p>
+            <div class="cal-row"><button type="button" class="btn-ghost" id="copyCal">Copy details</button><span class="copied" id="copied" hidden>Copied</span></div>
+          </div>
+          <div class="log">
+            <span class="label">Behind the scenes · demo</span>
+            <ol id="logList"></ol>
+          </div>
+          <button type="button" class="linkbtn" id="again">Register someone else</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="wrap demo" id="demo" aria-labelledby="demoTitle">
+    <div class="demo-head">
+      <h2 class="sec-title" id="demoTitle">The first query you’ll write</h2>
+      <p>Same data you keep in a sheet. Five lines of SQL replace a filter, three SUMIFS formulas and a manual sort.</p>
+    </div>
+    <div class="demo-grid">
+      <div>
+        <div class="panel-cap"><span class="label">In a spreadsheet</span><span class="sample">sample data</span></div>
+        <div class="sheet">
+          <div class="fxbar"><span class="ref">E2</span><span class="fx">fx</span><span class="formula">=SUMIFS(C:C, B:B, "North", A:A, "&gt;=2026-10-01")</span></div>
+          <div class="scroll-x">
+            <table class="grid" id="sheet">
+              <thead>
+                <tr><th></th><th>A</th><th>B</th><th>C</th></tr>
+              </thead>
+              <tbody>
+                <tr class="hdr"><th>1</th><td>order_date</td><td>region</td><td class="num">revenue</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="sheet-note">One SUMIFS per region, then sort the totals by hand. Add a region and you edit the formulas again.</p>
+        </div>
+      </div>
+      <div>
+        <div class="panel-cap"><span class="label">In SQL</span><span class="sample">runs in your browser</span></div>
+        <div class="sql">
+          <div class="sql-bar">
+            <span class="tab">revenue_by_region.sql</span>
+            <button class="run" type="button" id="runBtn"><svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z" fill="currentColor"/></svg>Run query</button>
+          </div>
+<pre class="code"><code><span class="ln"><span class="kw">SELECT</span> region, <span class="fn">SUM</span>(revenue) <span class="kw">AS</span> revenue</span><span class="ln"><span class="kw">FROM</span>   orders</span><span class="ln"><span class="kw">WHERE</span>  order_date &gt;= <span class="str">'2026-10-01'</span></span><span class="ln"><span class="kw">GROUP BY</span> region</span><span class="ln"><span class="kw">ORDER BY</span> revenue <span class="kw">DESC</span>;</span></code></pre>
+          <div class="result">
+            <span class="label" id="resLabel">Result · 3 rows</span>
+            <table class="res">
+              <thead><tr><th>region</th><th class="num">revenue</th></tr></thead>
+              <tbody id="resBody">
+                <tr><td>North</td><td class="num">3,345</td></tr>
+                <tr><td>South</td><td class="num">2,510</td></tr>
+                <tr><td>West</td><td class="num">1,940</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap agenda" id="agenda" aria-labelledby="agTitle">
+    <div class="agenda-side">
+      <span class="label">Agenda</span>
+      <h2 class="sec-title" id="agTitle">What happens in the 60 minutes</h2>
+      <p>You follow along in a browser editor with the sample data already loaded. Camera off is fine.</p>
+    </div>
+    <ol class="steps">
+      <li><time>00:00</time><div><h3>Where spreadsheets break</h3><p>File size limits, copy-paste errors and reports nobody can trace. Why analysts move to SQL.</p></div></li>
+      <li><time>00:10</time><div><h3>Your first SELECT, live</h3><p>Everyone runs queries on a 50,000-row sales table. Nothing to install.</p></div></li>
+      <li><time>00:25</time><div><h3>Filter and sort without touching the data</h3><p>WHERE and ORDER BY next to a filter view, so you see what each line does.</p></div></li>
+      <li><time>00:40</time><div><h3>GROUP BY is a pivot table</h3><p>Rebuild a monthly revenue pivot in five lines and change it in seconds.</p></div></li>
+      <li><time>00:50</time><div><h3>Q&amp;A and the course plan</h3><p>Ask anything. Then a walk through the 6-week course and who it suits.</p></div></li>
+    </ol>
+  </section>
+
+  <div class="band">
+    <section class="wrap who" aria-labelledby="whoTitle">
+      <h2 class="sec-title" id="whoTitle">Made for people who</h2>
+      <div class="who-grid">
+        <div class="who-item"><code>=VLOOKUP(…)</code><h3>Build reports in Excel or Sheets</h3><p>You already think in rows, columns and formulas. SQL uses the same ideas.</p></div>
+        <div class="who-item"><code>Calculating… 47%</code><h3>Wait for files to recalculate</h3><p>Your workbook has outgrown the spreadsheet and every change takes minutes.</p></div>
+        <div class="who-item"><code>“Just pull it from the DB”</code><h3>Get asked for database exports</h3><p>You want to answer the question yourself instead of waiting on IT.</p></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="wrap course" id="course" aria-labelledby="courseTitle">
+    <div class="course-head">
+      <h2 class="sec-title" id="courseTitle">After the webinar: the 6-week course</h2>
+      <p>Two live evenings a week, 19:00 CET, with homework on real datasets. Price and dates are shared at the end of the webinar. Attending doesn’t commit you to anything.</p>
+    </div>
+    <ol class="weeks">
+      <li><span class="label">Week 1</span><h3>SELECT, WHERE, ORDER BY</h3><p>Read any table and answer simple questions.</p></li>
+      <li><span class="label">Week 2</span><h3>Aggregates and GROUP BY</h3><p>Totals, averages and counts by any dimension.</p></li>
+      <li><span class="label">Week 3</span><h3>JOINs</h3><p>Combine orders, customers and products without duplicates.</p></li>
+      <li><span class="label">Week 4</span><h3>Subqueries and CTEs</h3><p>Break long questions into readable steps.</p></li>
+      <li><span class="label">Week 5</span><h3>Window functions</h3><p>Running totals, rankings and month-over-month change.</p></li>
+      <li><span class="label">Week 6</span><h3>Capstone</h3><p>Build a reporting dataset from raw tables and present it.</p></li>
+    </ol>
+  </section>
+
+  <section class="wrap proof" aria-labelledby="proofTitle">
+    <div class="course-head">
+      <h2 class="sec-title" id="proofTitle">From past attendees</h2>
+      <p class="sample">Sample testimonials written for this demo.</p>
+    </div>
+    <div class="quotes">
+      <figure class="quote"><blockquote>“I’d been told to ‘just learn SQL’ for a year. A week after the webinar I rewrote our weekly sales pivot as one query, and it runs in seconds.”</blockquote><figcaption><strong>Kasia</strong> · finance analyst</figcaption></figure>
+      <figure class="quote"><blockquote>“The GROUP BY and pivot table comparison is where it clicked. I signed up for the course the same night.”</blockquote><figcaption><strong>Tom</strong> · operations coordinator</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="wrap faq" id="faq" aria-labelledby="faqTitle">
+    <h2 class="sec-title" id="faqTitle">Questions</h2>
+    <div class="faq-list">
+      <details open><summary>Is it really free?</summary><p>Yes. Registration takes 30 seconds and there’s no card involved.</p></details>
+      <details><summary>Do I need to install anything?</summary><p>No. You get a link to a browser-based SQL editor with the sample data already loaded. Any laptop works.</p></details>
+      <details><summary>I can’t make it live. Is there a replay?</summary><p>Everyone who registers gets the replay by email the next morning. It stays online for 7 days.</p></details>
+      <details><summary>I’ve never written code. Is this too advanced?</summary><p>It’s built for complete beginners. If you can write a SUM formula, you can follow along.</p></details>
+      <details><summary>Why do you ask for my phone number?</summary><p>For one SMS reminder an hour before the start. We don’t call and we don’t share it.</p></details>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="finalTitle">
+    <div class="wrap final-in">
+      <div>
+        <h2 id="finalTitle">Thursday 3 December, 19:00 CET</h2>
+        <p>60 minutes, free, for complete beginners.</p>
+      </div>
+      <a class="btn btn-mark" href="#register" id="finalCta">Save my seat</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot" id="about-demo">
+  <div class="wrap foot-in">
+    <div>
+      <span class="logo"><i aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b></i>rowcount</span>
+      <p>This is a demo landing page. The school, people, seat counts and testimonials are samples. The form doesn’t send data anywhere.</p>
+    </div>
+    <div>
+      <span class="label">How this page works</span>
+      <ul class="stack-list">
+        <li>One fast static page with a single goal: the sign-up form.</li>
+        <li>Form goes to an n8n webhook, which adds the lead to Mailchimp with a webinar tag.</li>
+        <li>Confirmation email right away, then an email and SMS reminder an hour before.</li>
+        <li>Meta Pixel and Google Analytics events on sign-up, for paid traffic.</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pad = n => String(n).padStart(2, '0');
+
+  // Countdown to Thu 3 Dec 2026, 19:00 CET (18:00 UTC)
+  const START = Date.UTC(2026, 11, 3, 18, 0, 0);
+  function tick() {
+    const diff = START - Date.now();
+    if (diff <= 0) {
+      $('#cdLabel').textContent = diff > -3600e3 ? 'Live now' : 'Replay available';
+      ['#cdD', '#cdH', '#cdM', '#cdS'].forEach(id => { $(id).textContent = '00'; });
+      return;
+    }
+    const s = Math.floor(diff / 1000);
+    $('#cdD').textContent = Math.floor(s / 86400);
+    $('#cdH').textContent = pad(Math.floor(s % 86400 / 3600));
+    $('#cdM').textContent = pad(Math.floor(s % 3600 / 60));
+    $('#cdS').textContent = pad(s % 60);
+  }
+  tick(); setInterval(tick, 1000);
+
+  // Spreadsheet vs SQL: the result is computed from the rows, not typed in
+  const ROWS = [
+    ['2026-09-28', 'North', 640],
+    ['2026-10-03', 'North', 1240],
+    ['2026-10-05', 'South', 980],
+    ['2026-10-11', 'North', 2105],
+    ['2026-10-14', 'West', 760],
+    ['2026-10-19', 'South', 1530],
+    ['2026-10-27', 'West', 1180]
+  ];
+  const CUTOFF = '2026-10-01';
+  const fmt = n => n.toLocaleString('en-US');
+  const sheetBody = $('#sheet tbody');
+  ROWS.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.className = r[0] >= CUTOFF ? '' : 'out';
+    tr.innerHTML = `<th>${i + 2}</th><td class="mono">${r[0]}</td><td>${r[1]}</td><td class="num">${fmt(r[2])}</td>`;
+    sheetBody.appendChild(tr);
+  });
+  function query() {
+    const sums = {};
+    ROWS.filter(r => r[0] >= CUTOFF).forEach(r => { sums[r[1]] = (sums[r[1]] || 0) + r[2]; });
+    return Object.entries(sums).sort((a, b) => b[1] - a[1]);
+  }
+  function renderResult(rows) {
+    $('#resBody').innerHTML = rows.map(([reg, sum], i) =>
+      `<tr style="animation-delay:${reduce ? 0 : i * 140}ms"><td>${reg}</td><td class="num">${fmt(sum)}</td></tr>`).join('');
+    $('#resLabel').textContent = `Result · ${rows.length} rows`;
+  }
+  let running = false;
+  $('#runBtn').addEventListener('click', () => {
+    if (running) return;
+    running = true;
+    const trs = $$('tr', sheetBody).slice(1);
+    $('#resBody').innerHTML = '';
+    $('#resLabel').textContent = 'Running…';
+    trs.forEach(tr => tr.classList.remove('out', 'hit'));
+    const step = reduce ? 0 : 160;
+    trs.forEach((tr, i) => setTimeout(() => {
+      tr.classList.add(ROWS[i][0] >= CUTOFF ? 'hit' : 'out');
+    }, i * step));
+    setTimeout(() => {
+      renderResult(query());
+      setTimeout(() => { trs.forEach(tr => tr.classList.remove('hit')); running = false; }, reduce ? 0 : 900);
+    }, trs.length * step + (reduce ? 0 : 200));
+  });
+  renderResult(query());
+
+  // Registration (demo: nothing leaves the page)
+  const form = $('#regForm'), done = $('#regDone');
+  const fields = {
+    name: { el: $('#f-name'), err: $('#e-name'), check: v => v.trim().length >= 2 ? '' : 'Enter your first name.' },
+    email: { el: $('#f-email'), err: $('#e-email'), check: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Enter an email address like name@example.com.' },
+    phone: { el: $('#f-phone'), err: $('#e-phone'), check: v => { const d = v.replace(/\D/g, ''); return d.length >= 7 && d.length <= 13 ? '' : 'Enter your mobile number. Digits and spaces are fine.'; } },
+    consent: { el: $('#f-consent'), err: $('#e-consent'), check: (v, el) => el.checked ? '' : 'Tick the box so we can email you the join link.' }
+  };
+  function setErr(f, msg) {
+    f.err.textContent = msg;
+    f.err.hidden = !msg;
+    f.el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  }
+  Object.values(fields).forEach(f => {
+    const ev = f.el.type === 'checkbox' ? 'change' : 'blur';
+    f.el.addEventListener(ev, () => { if (f.el.getAttribute('aria-invalid') === 'true' || ev === 'change') setErr(f, f.check(f.el.value, f.el)); });
+    f.el.addEventListener('input', () => { if (f.el.getAttribute('aria-invalid') === 'true') setErr(f, f.check(f.el.value, f.el)); });
+  });
+
+  let seats = 318;
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    let first = null;
+    Object.values(fields).forEach(f => {
+      const msg = f.check(f.el.value, f.el);
+      setErr(f, msg);
+      if (msg && !first) first = f.el;
+    });
+    if (first) { first.focus(); return; }
+
+    const name = fields.name.el.value.trim().split(/\s+/)[0];
+    const email = fields.email.el.value.trim();
+    const phone = $('#f-cc').value + ' ' + fields.phone.el.value.replace(/\D/g, '');
+    seats = Math.min(500, seats + 1);
+    $('#seatCount').textContent = seats;
+    $('#seatBar').style.width = (seats / 500 * 100).toFixed(1) + '%';
+    $('#dName').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+    $('#dEmail').textContent = email;
+    form.hidden = true;
+    done.hidden = false;
+    done.focus();
+
+    const now = new Date();
+    const t = d => `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    const entries = [
+      ['Form checked', 'name, email, phone ' + phone.replace(/\d(?=\d{3})/g, '•')],
+      ['Mailchimp', 'lead added to “SQL webinar · Dec 2026”, tag sql-webinar'],
+      ['Email', 'confirmation with the join link sent'],
+      ['Scheduled', 'email + SMS reminder, 3 Dec 18:00 CET']
+    ];
+    const list = $('#logList');
+    list.innerHTML = '';
+    entries.forEach(([k, v], i) => setTimeout(() => {
+      const li = document.createElement('li');
+      const time = document.createElement('time');
+      time.textContent = t(new Date(now.getTime() + i * 400));
+      const span = document.createElement('span');
+      const b = document.createElement('b');
+      b.textContent = k;
+      span.append(b, ' · ' + v);
+      li.append(time, span);
+      list.appendChild(li);
+    }, reduce ? 0 : 250 + i * 420));
+  });
+
+  $('#again').addEventListener('click', () => {
+    form.reset();
+    Object.values(fields).forEach(f => setErr(f, ''));
+    done.hidden = true;
+    form.hidden = false;
+    $('#copied').hidden = true;
+    fields.name.el.focus();
+  });
+
+  $('#copyCal').addEventListener('click', () => {
+    const text = 'Rowcount SQL webinar\nThursday 3 December 2026, 19:00–20:00 CET\nThe join link is in your confirmation email.';
+    const show = () => { $('#copied').hidden = false; setTimeout(() => { $('#copied').hidden = true; }, 2200); };
+    const fallback = () => {
+      const r = document.createRange();
+      r.selectNodeContents($('#calText'));
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    };
+    try {
+      navigator.clipboard.writeText(text).then(show, fallback);
+    } catch (err) { fallback(); }
+  });
+
+  $('#finalCta').addEventListener('click', e => {
+    e.preventDefault();
+    $('#register').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(() => { (form.hidden ? done : fields.name.el).focus({ preventScroll: true }); }, reduce ? 0 : 450);
+  });
+})();
+</script>
+</body>
+</html>
