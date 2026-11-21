@@ -88,6 +88,28 @@ a{color:inherit}
 .cd span{font-family:var(--f-mono);font-weight:700;font-size:1.5rem;line-height:1.1;font-variant-numeric:tabular-nums}
 .cd small{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
 
+.fit{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.fit li{display:flex;gap:10px;align-items:baseline;font-weight:500}
+.fit li::before{content:"✓";font-weight:800;color:var(--accent)}
+.peek{margin-left:auto;font-weight:700;font-size:.95rem;color:var(--accent);text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:1px}
+.hero-copy>*{animation:enter .7s cubic-bezier(.2,.7,.2,1) both}
+.hero-copy>:nth-child(2){animation-delay:.05s}
+.hero-copy>:nth-child(3){animation-delay:.1s}
+.hero-copy>:nth-child(4){animation-delay:.15s}
+.hero-copy>:nth-child(5){animation-delay:.2s}
+.hero-copy>:nth-child(6){animation-delay:.25s}
+.card{animation:enter .7s .18s cubic-bezier(.2,.7,.2,1) both}
+@keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.gets{list-style:none;margin:-6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.gets li{font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--soft)}
+.res .barcell{width:52%}
+.barcell span{display:block;height:10px;border-radius:3px;background:var(--code-kw);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.res tbody tr:first-child .barcell span{background:var(--code-str)}
+.swipe{display:none}
+.quote{transition:transform .2s ease}
+.quote:hover{transform:translateY(-3px)}
+.final .final-cd{display:inline-block;margin-top:14px;opacity:1;font-family:var(--f-mono);font-weight:700;font-size:.9rem;padding:6px 12px;border-radius:999px;background:var(--mark);color:var(--mark-ink)}
+
 /* Form card */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 24px 50px -30px var(--card-shadow);display:flex;flex-direction:column;gap:18px;min-width:0}
 .card form{display:flex;flex-direction:column;gap:16px}
@@ -176,17 +198,8 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
 .steps h3{font-size:1.25rem;font-weight:780;font-variation-settings:"wdth" 108;margin-bottom:6px}
 .steps p{color:var(--muted)}
 
-/* Audience */
-.band{background:var(--surface);border-block:1px solid var(--line)}
-.who{padding-block:72px;display:grid;gap:28px}
-.who-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.who-item{padding:22px;border-radius:16px;background:var(--bg);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
-.who-item code{font:600 .82rem var(--f-mono);align-self:flex-start;padding:4px 8px;border-radius:6px;background:var(--soft);color:var(--ink)}
-.who-item h3{font-size:1.15rem;font-weight:760;font-variation-settings:"wdth" 106}
-.who-item p{color:var(--muted);font-size:.95rem}
-
 /* Course */
-.course{padding-block:80px;display:grid;gap:28px}
+.course{padding-block:80px;display:grid;gap:28px;border-top:1px solid var(--line)}
 .course-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 48px;flex-wrap:wrap}
 .course-head p{max-width:46ch;color:var(--muted)}
 .weeks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)}
@@ -237,25 +250,23 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
   .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
   .facts div:nth-child(2){border-right:0}
   .facts div:nth-child(-n+2){border-bottom:1px solid var(--line)}
-  .who-grid{grid-template-columns:minmax(0,1fr)}
-  .weeks{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .weeks li:nth-child(3n){border-right:1px solid var(--line)}
-  .weeks li:nth-child(2n){border-right:0}
-  .weeks li:nth-last-child(-n+3){border-bottom:1px solid var(--line)}
-  .weeks li:nth-last-child(-n+2){border-bottom:0}
+  .weeks{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;border:0;border-radius:0;background:transparent;padding-bottom:8px}
+  .weeks li,.weeks li:nth-child(n){flex:0 0 min(80%,320px);scroll-snap-align:start;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+  .swipe{display:block}
+  .demo,.agenda,.course{padding-block:56px}
+  .proof,.faq{padding-block:0 56px}
+  .peek{margin-left:0}
   .quotes{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:520px){
   .card{padding:20px}
   .cd div{min-width:54px}
   .steps li{grid-template-columns:minmax(0,1fr);gap:6px}
-  .weeks{grid-template-columns:minmax(0,1fr)}
-  .weeks li{border-right:0!important;border-bottom:1px solid var(--line)!important}
-  .weeks li:last-child{border-bottom:0!important}
 }
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
-  .log li,.res tbody tr{animation:none}
+  .log li,.res tbody tr,.hero-copy>*,.card{animation:none}
+  .barcell span,.quote{transition:none}
   .grid td,.bar span,.btn{transition:none}
 }
 </style>
@@ -272,7 +283,12 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
       <div class="hero-copy">
         <span class="kicker"><b>Free</b>Live webinar for spreadsheet people</span>
         <h1>Swap your VLOOKUPs for <span class="hl">SQL</span> in one evening</h1>
-        <p class="lede">A live, beginner-level hour for people who build reports in Excel or Google Sheets. You’ll run real queries on a sample sales table and leave knowing what the 6-week course covers.</p>
+        <p class="lede">A live, beginner-level hour. You’ll run real queries on a sample sales table and leave knowing what the 6-week course covers.</p>
+        <ul class="fit" aria-label="Who it’s for">
+          <li>You build reports in Excel or Google Sheets</li>
+          <li>Your workbook takes minutes to recalculate</li>
+          <li>You keep getting asked to “just pull it from the database”</li>
+        </ul>
         <dl class="facts">
           <div><dt class="label">Date</dt><dd>Thu, 3 Dec 2026</dd></div>
           <div><dt class="label">Time</dt><dd>19:00 CET</dd></div>
@@ -287,6 +303,7 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
             <div><span id="cdM">00</span><small>min</small></div>
             <div><span id="cdS">00</span><small>sec</small></div>
           </div>
+          <a class="peek" href="#demo">See the first query ↓</a>
         </div>
       </div>
 
@@ -294,6 +311,11 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
         <form id="regForm" novalidate>
           <h2 class="card-title">Save your free seat</h2>
           <p class="card-sub">The join link and the replay come by email.</p>
+          <ul class="gets" aria-label="What you get">
+            <li>Live session + replay</li>
+            <li>SQL cheat sheet (PDF)</li>
+            <li>Practice dataset</li>
+          </ul>
           <div class="field">
             <label for="f-name">First name</label>
             <input id="f-name" name="name" autocomplete="given-name" placeholder="Anna" aria-describedby="e-name">
@@ -386,11 +408,11 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
           <div class="result">
             <span class="label" id="resLabel">Result · 3 rows</span>
             <table class="res">
-              <thead><tr><th>region</th><th class="num">revenue</th></tr></thead>
+              <thead><tr><th>region</th><th aria-hidden="true"></th><th class="num">revenue</th></tr></thead>
               <tbody id="resBody">
-                <tr><td>North</td><td class="num">3,345</td></tr>
-                <tr><td>South</td><td class="num">2,510</td></tr>
-                <tr><td>West</td><td class="num">1,940</td></tr>
+                <tr><td>North</td><td class="barcell" aria-hidden="true"><span style="width:100%"></span></td><td class="num">3,345</td></tr>
+                <tr><td>South</td><td class="barcell" aria-hidden="true"><span style="width:75%"></span></td><td class="num">2,510</td></tr>
+                <tr><td>West</td><td class="barcell" aria-hidden="true"><span style="width:58%"></span></td><td class="num">1,940</td></tr>
               </tbody>
             </table>
           </div>
@@ -414,22 +436,12 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
     </ol>
   </section>
 
-  <div class="band">
-    <section class="wrap who" aria-labelledby="whoTitle">
-      <h2 class="sec-title" id="whoTitle">Made for people who</h2>
-      <div class="who-grid">
-        <div class="who-item"><code>=VLOOKUP(…)</code><h3>Build reports in Excel or Sheets</h3><p>You already think in rows, columns and formulas. SQL uses the same ideas.</p></div>
-        <div class="who-item"><code>Calculating… 47%</code><h3>Wait for files to recalculate</h3><p>Your workbook has outgrown the spreadsheet and every change takes minutes.</p></div>
-        <div class="who-item"><code>“Just pull it from the DB”</code><h3>Get asked for database exports</h3><p>You want to answer the question yourself instead of waiting on IT.</p></div>
-      </div>
-    </section>
-  </div>
-
   <section class="wrap course" id="course" aria-labelledby="courseTitle">
     <div class="course-head">
       <h2 class="sec-title" id="courseTitle">After the webinar: the 6-week course</h2>
       <p>Two live evenings a week, 19:00 CET, with homework on real datasets. Price and dates are shared at the end of the webinar. Attending doesn’t commit you to anything.</p>
     </div>
+    <span class="swipe label" aria-hidden="true">Swipe for all 6 weeks →</span>
     <ol class="weeks">
       <li><span class="label">Week 1</span><h3>SELECT, WHERE, ORDER BY</h3><p>Read any table and answer simple questions.</p></li>
       <li><span class="label">Week 2</span><h3>Aggregates and GROUP BY</h3><p>Totals, averages and counts by any dimension.</p></li>
@@ -467,6 +479,7 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
       <div>
         <h2 id="finalTitle">Thursday 3 December, 19:00 CET</h2>
         <p>60 minutes, free, for complete beginners.</p>
+        <p class="final-cd" id="finalCd">Starts in 12 days</p>
       </div>
       <a class="btn btn-mark" href="#register" id="finalCta">Save my seat</a>
     </div>
@@ -505,13 +518,16 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
     if (diff <= 0) {
       $('#cdLabel').textContent = diff > -3600e3 ? 'Live now' : 'Replay available';
       ['#cdD', '#cdH', '#cdM', '#cdS'].forEach(id => { $(id).textContent = '00'; });
+      $('#finalCd').textContent = $('#cdLabel').textContent;
       return;
     }
     const s = Math.floor(diff / 1000);
-    $('#cdD').textContent = Math.floor(s / 86400);
-    $('#cdH').textContent = pad(Math.floor(s % 86400 / 3600));
-    $('#cdM').textContent = pad(Math.floor(s % 3600 / 60));
+    const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+    $('#cdD').textContent = d;
+    $('#cdH').textContent = pad(h);
+    $('#cdM').textContent = pad(m);
     $('#cdS').textContent = pad(s % 60);
+    $('#finalCd').textContent = `Starts in ${d} ${d === 1 ? 'day' : 'days'}, ${h} h ${pad(m)} min`;
   }
   tick(); setInterval(tick, 1000);
 
@@ -539,10 +555,20 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
     ROWS.filter(r => r[0] >= CUTOFF).forEach(r => { sums[r[1]] = (sums[r[1]] || 0) + r[2]; });
     return Object.entries(sums).sort((a, b) => b[1] - a[1]);
   }
-  function renderResult(rows) {
-    $('#resBody').innerHTML = rows.map(([reg, sum], i) =>
-      `<tr style="animation-delay:${reduce ? 0 : i * 140}ms"><td>${reg}</td><td class="num">${fmt(sum)}</td></tr>`).join('');
+  function renderResult(rows, animate) {
+    const max = rows.length ? rows[0][1] : 1;
+    $('#resBody').innerHTML = rows.map(([reg, sum], i) => {
+      const w = (sum / max * 100).toFixed(1);
+      return `<tr style="animation-delay:${reduce || !animate ? 0 : i * 140}ms"><td>${reg}</td>` +
+        `<td class="barcell" aria-hidden="true"><span data-w="${w}" style="width:${animate ? 0 : w}%"></span></td>` +
+        `<td class="num">${fmt(sum)}</td></tr>`;
+    }).join('');
     $('#resLabel').textContent = `Result · ${rows.length} rows`;
+    if (animate) requestAnimationFrame(() => requestAnimationFrame(() => {
+      $$('#resBody .barcell span').forEach((s, i) => {
+        setTimeout(() => { s.style.width = s.dataset.w + '%'; }, reduce ? 0 : i * 140);
+      });
+    }));
   }
   let running = false;
   $('#runBtn').addEventListener('click', () => {
@@ -557,11 +583,11 @@ table.res{border-collapse:collapse;width:100%;font:500 .88rem var(--f-mono);font
       tr.classList.add(ROWS[i][0] >= CUTOFF ? 'hit' : 'out');
     }, i * step));
     setTimeout(() => {
-      renderResult(query());
+      renderResult(query(), true);
       setTimeout(() => { trs.forEach(tr => tr.classList.remove('hit')); running = false; }, reduce ? 0 : 900);
     }, trs.length * step + (reduce ? 0 : 200));
   });
-  renderResult(query());
+  renderResult(query(), false);
 
   // Registration (demo: nothing leaves the page)
   const form = $('#regForm'), done = $('#regDone');

@@ -16,7 +16,9 @@
   --accent:#1D5C54; --accent-hover:#164A44; --accent-ink:#FFFFFF; --accent-soft:#D3E6E0;
   --good:#2A7A4B; --good-soft:#DDF0E3; --info:#3D5A80; --info-soft:#E1E8F2;
   --outline:rgba(23,33,31,.16); --ground:rgba(23,33,31,.13); --shadow:rgba(23,33,31,.12);
-  --coffee:#6B4429; --hole:#131716;
+  --coffee:#6B4429; --coffee-deep:#3A2414; --crema:#B07A4C; --hole:#131716;
+  --spot:#FAFCFB; --floor:rgba(23,33,31,.07); --num:rgba(29,92,84,.07);
+  --glass:rgba(255,255,255,.4); --glass-edge:rgba(23,33,31,.24); --glint:rgba(255,255,255,.85); --steam:rgba(23,33,31,.16);
   --f-display:"Bricolage Grotesque","Figtree",system-ui,sans-serif;
   --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
@@ -27,7 +29,7 @@
     --accent:#80C7B8; --accent-hover:#9AD5C8; --accent-ink:#0A1916; --accent-soft:#1E3530;
     --good:#72CC96; --good-soft:#18301F; --info:#9DB7DA; --info-soft:#1C2635;
     --outline:rgba(229,235,233,.20); --ground:rgba(0,0,0,.45); --shadow:rgba(0,0,0,.5);
-    --coffee:#8A5A38; --hole:#060807;
+    --coffee:#8A5A38; --coffee-deep:#4A2E1A; --crema:#BA8758; --hole:#060807; --spot:#25322E; --floor:rgba(0,0,0,.28); --num:rgba(128,199,184,.07); --glass:rgba(255,255,255,.06); --glass-edge:rgba(229,235,233,.28); --glint:rgba(255,255,255,.35); --steam:rgba(229,235,233,.22);
     color-scheme:dark;
   }
 }
@@ -36,7 +38,7 @@
   --accent:#80C7B8; --accent-hover:#9AD5C8; --accent-ink:#0A1916; --accent-soft:#1E3530;
   --good:#72CC96; --good-soft:#18301F; --info:#9DB7DA; --info-soft:#1C2635;
   --outline:rgba(229,235,233,.20); --ground:rgba(0,0,0,.45); --shadow:rgba(0,0,0,.5);
-  --coffee:#8A5A38; --hole:#060807;
+  --coffee:#8A5A38; --coffee-deep:#4A2E1A; --crema:#BA8758; --hole:#060807; --spot:#25322E; --floor:rgba(0,0,0,.28); --num:rgba(128,199,184,.07); --glass:rgba(255,255,255,.06); --glass-edge:rgba(229,235,233,.28); --glint:rgba(255,255,255,.35); --steam:rgba(229,235,233,.22);
   color-scheme:dark;
 }
 
@@ -79,12 +81,21 @@ p{margin:0}
 
 /* Product */
 .product{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:clamp(24px,4.5vw,64px);padding-block:32px 80px;align-items:start}
-.stage{position:relative;background:var(--panel);border-radius:28px;aspect-ratio:1/1;max-width:100%;display:grid;place-items:center;overflow:hidden}
-.stage .art{width:84%;height:auto;display:block}
-.views{position:absolute;top:16px;left:16px;display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+@property --g1{syntax:"<color>";inherits:true;initial-value:#D3E6DF}
+@property --g2{syntax:"<color>";inherits:true;initial-value:#93BDB2}
+@property --g3{syntax:"<color>";inherits:true;initial-value:#5D8C81}
+@property --g-in{syntax:"<color>";inherits:true;initial-value:#4A776D}
+.stage{position:relative;background:radial-gradient(90% 70% at 50% 24%,var(--spot) 0%,transparent 70%),var(--panel);border-radius:28px;aspect-ratio:4/5;max-width:100%;display:grid;place-items:center;overflow:hidden;transition:--g1 .6s ease,--g2 .6s ease,--g3 .6s ease,--g-in .6s ease}
+.stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(180deg,transparent,var(--floor));pointer-events:none}
+.stage-num{position:absolute;right:-.02em;top:.04em;font-family:var(--f-display);font-weight:800;font-size:clamp(9rem,20vw,16rem);line-height:.8;letter-spacing:-.06em;color:var(--num);pointer-events:none;user-select:none;font-variation-settings:"opsz" 96}
+.stage .art{position:relative;z-index:1;display:block;height:auto;animation:fadeIn .45s ease}
+.stage .art-side{width:74%}
+.stage .art-top{width:80%}
+@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.views{position:absolute;z-index:2;top:16px;left:16px;display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
 .views button{appearance:none;border:0;background:transparent;color:var(--muted);font:600 .85rem/1 var(--f-body);padding:9px 12px;border-radius:9px;cursor:pointer}
 .views button[aria-selected="true"]{background:var(--accent-soft);color:var(--ink)}
-.stage-cap{position:absolute;left:18px;bottom:16px;right:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+.stage-cap{position:absolute;z-index:2;left:18px;bottom:16px;right:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
 
 .buybox{position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;flex-direction:column;gap:20px;min-width:0}
 .buybox h1{font-size:clamp(2.5rem,5.2vw,3.9rem);line-height:.98;font-weight:780;font-variation-settings:"opsz" 96;letter-spacing:-.035em}
@@ -113,7 +124,14 @@ p{margin:0}
 .assure{list-style:none;margin:0;padding:0;display:grid;gap:10px;border-top:1px solid var(--line);padding-top:18px}
 .assure li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
 .assure svg{flex:none;margin-top:3px;color:var(--accent)}
-.specs{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:0;border-top:1px solid var(--line);padding-top:18px;font-size:.92rem}
+.buycard{display:flex;flex-direction:column;gap:18px;padding:22px;border-radius:20px;background:var(--surface);border:1px solid var(--line);box-shadow:0 22px 44px -30px var(--shadow)}
+.buycard .ship-note{margin-top:-6px}
+.specs-box{border-top:1px solid var(--line)}
+.specs-box summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px;padding:14px 0;font-weight:600}
+.specs-box summary::-webkit-details-marker{display:none}
+.specs-box summary::after{content:"+";font-family:var(--f-mono);color:var(--muted)}
+.specs-box[open] summary::after{content:"–"}
+.specs{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:0 0 10px;font-size:.92rem}
 .specs dt{color:var(--muted)}
 .specs dd{margin:0;font-family:var(--f-mono);font-size:.86rem}
 
@@ -127,11 +145,22 @@ p{margin:0}
 .art .inner{fill:var(--g-in)}
 .art .ribs-in path,.art .ribs-top path{fill:none;stroke:var(--g3);stroke-opacity:.6;stroke-width:2.4;stroke-linecap:round}
 .art .speck circle{fill:var(--speck)}
-.art .drop{fill:var(--coffee);animation:drip 2.6s cubic-bezier(.5,0,.9,.5) infinite}
+.art .spec{fill:none;stroke:var(--glint);stroke-width:7;stroke-linecap:round;opacity:.45}
 .art .hole{fill:var(--hole)}
 .art .handle-top{fill:var(--g2);stroke:var(--outline);stroke-width:1.5}
 .art .handle-gap{fill:var(--panel)}
-@keyframes drip{0%{transform:translateY(0);opacity:0}12%{opacity:1}70%{opacity:1}100%{transform:translateY(52px);opacity:0}}
+.art .glass{fill:var(--glass);stroke:var(--glass-edge);stroke-width:2}
+.art .glint{fill:none;stroke:var(--glint);stroke-width:5;stroke-linecap:round;opacity:.7}
+.art .glint-sm{stroke-width:3}
+.art .ticks{fill:none;stroke:var(--glass-edge);stroke-width:2;stroke-linecap:round}
+.art .coffee-top{fill:var(--crema)}
+.art .stream{fill:none;stroke:var(--coffee);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:16 7;animation:flow .6s linear infinite;transition:opacity .4s ease}
+.art .stream.is-stopped{opacity:0}
+.art .steam path{fill:none;stroke:var(--steam);stroke-width:3;stroke-linecap:round;animation:steam 3.6s ease-in-out infinite}
+.art .steam path:nth-child(2){animation-delay:1.2s}
+.art .steam path:nth-child(3){animation-delay:2.4s}
+@keyframes flow{to{stroke-dashoffset:-23}}
+@keyframes steam{0%{opacity:0;transform:translateY(8px)}35%{opacity:1}100%{opacity:0;transform:translateY(-14px)}}
 .stage[data-glaze="celadon"]{--g1:#D3E6DF;--g2:#93BDB2;--g3:#5D8C81;--g-in:#4A776D;--speck:rgba(28,40,36,.38)}
 .stage[data-glaze="oat"]{--g1:#F3EBDD;--g2:#D6C5A6;--g3:#A28D69;--g-in:#8A7553;--speck:rgba(60,44,24,.42)}
 .stage[data-glaze="charcoal"]{--g1:#6E747A;--g2:#454A50;--g3:#26292D;--g-in:#1C1E21;--speck:rgba(235,235,230,.22)}
@@ -149,10 +178,25 @@ p{margin:0}
 .recipe dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .recipe dd{margin:0;font-family:var(--f-display);font-size:1.7rem;font-weight:650;font-variant-numeric:tabular-nums;font-variation-settings:"opsz" 48;white-space:nowrap}
 .recipe dd small{font-size:.95rem;font-weight:500;color:var(--muted);margin-left:2px}
-.pours{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;position:relative}
+.console{display:grid;gap:18px;padding:22px;border-radius:20px;background:var(--bg);border:1px solid var(--line)}
+.readouts{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:14px 40px;align-items:end}
+.readout{display:flex;flex-direction:column;gap:6px;min-width:0}
+.readout .big{font-family:var(--f-mono);font-size:clamp(2rem,4vw,2.8rem);font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.readout .big small{font-size:.42em;color:var(--muted)}
+.now{font-size:1.08rem;font-weight:600;min-height:1.6em}
+.bbar{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.bbar span{display:block;height:100%;width:0;background:var(--accent);border-radius:999px}
+.console-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.console-actions .note{margin-left:auto}
+.pours{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,35fr) minmax(0,40fr) minmax(0,90fr) minmax(0,45fr);column-gap:0;row-gap:24px;position:relative}
 .pours::before{content:"";position:absolute;left:0;right:0;top:17px;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 14px)}
-.pours li{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0}
-.pours time{position:relative;align-self:flex-start;font-family:var(--f-mono);font-size:.9rem;font-weight:500;background:var(--accent);color:var(--accent-ink);padding:8px 12px;border-radius:999px;font-variant-numeric:tabular-nums}
+.pours::after{content:"";position:absolute;z-index:0;left:0;top:17px;height:2px;width:var(--p,0%);background:var(--accent)}
+.pours li{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0;padding-right:20px;transition:opacity .3s ease}
+.pours time{position:relative;z-index:1;align-self:flex-start;font-family:var(--f-mono);font-size:.9rem;font-weight:500;background:var(--accent);color:var(--accent-ink);border:1.5px solid var(--accent);padding:7px 12px;border-radius:999px;font-variant-numeric:tabular-nums;transition:background .3s ease,color .3s ease,border-color .3s ease}
+.pours.running time{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.pours.running li.is-done time{background:var(--accent-soft);border-color:var(--accent-soft)}
+.pours.running li.is-active time{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.pours.running li:not(.is-active):not(.is-done){opacity:.5}
 .pours h3{font-size:1.2rem;font-weight:680;margin-top:8px}
 .pours p{color:var(--muted);font-size:.95rem}
 .pours .grams{font-family:var(--f-mono);font-size:.82rem;color:var(--ink)}
@@ -160,7 +204,17 @@ p{margin:0}
 /* Reviews */
 .reviews{padding-block:80px;display:grid;gap:32px}
 .rev-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-.rev{margin:0;padding:24px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.rev{margin:0;padding:24px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:14px;transition:transform .2s ease,box-shadow .2s ease}
+.rev:hover{transform:translateY(-3px);box-shadow:0 18px 36px -26px var(--shadow)}
+.reviews .sec-head{align-items:center}
+.rating-sum{display:flex;gap:16px 32px;align-items:center;flex-wrap:wrap}
+.rs-score{display:flex;flex-direction:column;gap:4px}
+.rs-score .big{font-family:var(--f-display);font-size:3.2rem;font-weight:750;line-height:.9;font-variant-numeric:tabular-nums;font-variation-settings:"opsz" 72}
+.rs-bars{list-style:none;margin:0;padding:0;display:grid;gap:6px;min-width:min(260px,100%)}
+.rs-bars li{display:grid;grid-template-columns:2.4em minmax(0,1fr) 2.4em;gap:10px;align-items:center;font-size:.82rem;color:var(--muted)}
+.rs-track{height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+.rs-track span{display:block;height:100%;background:var(--accent);border-radius:999px}
+.rs-bars .mono{text-align:right}
 .rev blockquote{margin:0;font-size:1.05rem;line-height:1.5}
 .rev figcaption{margin-top:auto;font-size:.9rem;color:var(--muted)}
 .rev figcaption strong{color:var(--ink);font-weight:600}
@@ -235,10 +289,17 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
 @media (max-width:860px){
   .product{grid-template-columns:minmax(0,1fr);padding-block:20px 56px}
   .buybox{position:static}
+  .stage{aspect-ratio:5/6}
+  .stage .art-side{width:58%}
+  .stage .art-top{width:76%}
+  .readouts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .readout.grow{grid-column:1/-1}
+  .console-actions .note{margin-left:0;flex-basis:100%}
+  .pours::after{display:none}
   .mbar{display:block;position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
   .mbar-in{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .mbar-in div{display:flex;flex-direction:column;line-height:1.25;min-width:0}
-  .mbar-in span{font-size:.85rem;color:var(--muted)}
+  .mbar-in > div span{font-size:.85rem;color:var(--muted)}
   body{padding-bottom:84px}
   .top .btn-sm{display:none}
   .recipe{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -260,7 +321,8 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
 }
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
-  .art .drop{animation:none;opacity:1}
+  .art .stream,.art .steam path,.stage .art{animation:none}
+  .stage,.rev,.pours li,.pours time{transition:none}
   .spinner{animation-duration:2.4s}
   .btn{transition:none}
 }
@@ -287,13 +349,14 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
 <main id="top">
   <section class="wrap product" aria-labelledby="pTitle">
     <div class="stage" data-glaze="celadon">
+      <span class="stage-num" aria-hidden="true">02</span>
       <div class="views" role="tablist" aria-label="Product view">
         <button type="button" role="tab" id="tab-side" aria-selected="true" data-view-btn="side">Side</button>
         <button type="button" role="tab" id="tab-top" aria-selected="false" data-view-btn="top">From above</button>
       </div>
 
-      <svg class="art art-side" viewBox="0 0 400 420" role="img" aria-labelledby="sideTitle">
-        <title id="sideTitle">Stożek 02 dripper in Celadon glaze, side view</title>
+      <svg class="art art-side" viewBox="0 0 400 500" role="img" aria-labelledby="sideTitle">
+        <title id="sideTitle">Stożek 02 dripper in Celadon glaze on a glass server, side view</title>
         <defs>
           <linearGradient id="gBody" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" style="stop-color:var(--g3)"/>
@@ -306,24 +369,42 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
             <stop offset=".3" style="stop-color:var(--g1)"/>
             <stop offset="1" style="stop-color:var(--g2)"/>
           </linearGradient>
+          <linearGradient id="gCoffee" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--crema)"/>
+            <stop offset=".18" style="stop-color:var(--coffee)"/>
+            <stop offset="1" style="stop-color:var(--coffee-deep)"/>
+          </linearGradient>
           <clipPath id="clipCone"><path d="M68 112 Q88 216 162 296 L238 296 Q312 216 332 112 Z"/></clipPath>
           <clipPath id="clipInner"><ellipse cx="200" cy="114" rx="117" ry="16"/></clipPath>
+          <clipPath id="clipCarafe"><path d="M150 248 L150 282 C150 300 92 312 92 350 L92 452 Q92 486 126 486 L274 486 Q308 486 308 452 L308 350 C308 312 250 300 250 282 L250 248 Z"/></clipPath>
         </defs>
-        <ellipse class="ground" cx="200" cy="398" rx="124" ry="9"/>
-        <path class="drop" d="M200 334c-5 8-6 12 0 15c6-3 5-7 0-15z"/>
-        <path class="handle" d="M318 150 C374 146 382 224 292 222"/>
-        <path class="base" d="M108 300h184v10c0 10-41 15-92 15s-92-5-92-15z"/>
-        <ellipse class="base-top" cx="200" cy="300" rx="92" ry="8"/>
-        <path class="body" d="M68 112 Q88 216 162 296 L238 296 Q312 216 332 112 Z" fill="url(#gBody)"/>
-        <g class="throw" clip-path="url(#clipCone)">
-          <path d="M40 160q160 18 320 0"/><path d="M40 206q160 15 320 0"/><path d="M40 250q160 11 320 0"/>
+        <ellipse class="ground" cx="200" cy="490" rx="138" ry="8"/>
+        <g clip-path="url(#clipCarafe)">
+          <rect id="coffee" x="80" y="414" width="240" height="100" fill="url(#gCoffee)"/>
+          <ellipse class="coffee-top" id="coffeeTop" cx="200" cy="414" rx="112" ry="5"/>
         </g>
-        <g class="speck" id="speckSide" clip-path="url(#clipCone)"></g>
-        <ellipse class="rim" cx="200" cy="112" rx="133" ry="22" fill="url(#gRim)"/>
-        <ellipse class="inner" cx="200" cy="114" rx="117" ry="16"/>
-        <g class="ribs-in" clip-path="url(#clipInner)">
-          <path d="M104 108q50 4 80 20"/><path d="M150 100q40 8 56 30"/><path d="M214 98q14 14 4 32"/><path d="M262 102q-14 16-40 28"/><path d="M302 112q-36 10-74 18"/>
+        <path class="stream" id="stream" d="M200 246 L200 414"/>
+        <path class="glass" d="M150 248 L150 282 C150 300 92 312 92 350 L92 452 Q92 486 126 486 L274 486 Q308 486 308 452 L308 350 C308 312 250 300 250 282 L250 248 Z"/>
+        <path class="glint" d="M108 358 L108 446"/>
+        <path class="glint glint-sm" d="M120 330 Q128 320 140 316"/>
+        <path class="ticks" d="M288 380h10M288 408h14M288 436h10M288 464h14"/>
+        <g transform="translate(40 -10) scale(.8)">
+          <path class="handle" d="M318 150 C374 146 382 224 292 222"/>
+          <path class="base" d="M108 300h184v10c0 10-41 15-92 15s-92-5-92-15z"/>
+          <ellipse class="base-top" cx="200" cy="300" rx="92" ry="8"/>
+          <path class="body" d="M68 112 Q88 216 162 296 L238 296 Q312 216 332 112 Z" fill="url(#gBody)"/>
+          <g class="throw" clip-path="url(#clipCone)">
+            <path d="M40 160q160 18 320 0"/><path d="M40 206q160 15 320 0"/><path d="M40 250q160 11 320 0"/>
+          </g>
+          <g class="speck" id="speckSide" clip-path="url(#clipCone)"></g>
+          <path class="spec" d="M96 140 Q110 206 158 268" clip-path="url(#clipCone)"/>
+          <ellipse class="rim" cx="200" cy="112" rx="133" ry="22" fill="url(#gRim)"/>
+          <ellipse class="inner" cx="200" cy="114" rx="117" ry="16"/>
+          <g class="ribs-in" clip-path="url(#clipInner)">
+            <path d="M104 108q50 4 80 20"/><path d="M150 100q40 8 56 30"/><path d="M214 98q14 14 4 32"/><path d="M262 102q-14 16-40 28"/><path d="M302 112q-36 10-74 18"/>
+          </g>
         </g>
+        <g class="steam" aria-hidden="true"><path d="M176 56c-10-14 10-22 0-36"/><path d="M200 50c-10-14 10-24 0-40"/><path d="M224 56c-10-14 10-22 0-36"/></g>
       </svg>
 
       <svg class="art art-top" viewBox="0 0 400 420" role="img" aria-labelledby="topTitle" hidden>
@@ -354,6 +435,7 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
       <h1 id="pTitle">Stożek 02 Dripper</h1>
       <p class="rating"><span class="stars" aria-hidden="true">★★★★★</span><strong>4.8</strong><span>· 126 reviews</span><span class="sample">(sample data)</span></p>
       <p class="lede">A porcelain cone with spiral ribs that hold the paper off the wall. Water drains evenly, so the cup comes out sweet and clear, every morning.</p>
+      <div class="buycard">
       <div class="price-row"><span class="price">€46</span><span class="note">incl. VAT</span></div>
 
       <fieldset class="glazes">
@@ -377,6 +459,7 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
       <button class="btn btn-lg" type="button" data-buy>Buy now · <span data-subtotal>€46.00</span></button>
       <p class="ship-note" id="shipNote">+ €6.90 EU shipping. Add one more and shipping is free.</p>
       <div class="paywith" aria-label="Accepted payments"><span>Card</span><span>Apple Pay</span><span>Google Pay</span><span>BLIK</span></div>
+      </div>
 
       <ul class="assure">
         <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Paid before 13:00, ships the same day</li>
@@ -384,6 +467,8 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
         <li><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>30-day returns, full refund</li>
       </ul>
 
+      <details class="specs-box">
+        <summary>Specifications</summary>
       <dl class="specs">
         <dt>Material</dt><dd>Porcelain, fired at 1280 °C</dd>
         <dt>Size</dt><dd>Rim Ø 13.2 cm · height 9.4 cm</dd>
@@ -391,6 +476,7 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
         <dt>Filters</dt><dd>Any #02 cone filter</dd>
         <dt>Fits</dt><dd>Cups and carafes 7–11 cm wide</dd>
       </dl>
+      </details>
     </div>
   </section>
 
@@ -408,7 +494,20 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
         <div><dt>Grind</dt><dd>Med-fine</dd></div>
         <div><dt>Total time</dt><dd>3:30</dd></div>
       </dl>
-      <ol class="pours">
+      <div class="console">
+        <div class="readouts">
+          <div class="readout"><span class="label">Brew time</span><span class="big" id="bClock">0:00</span></div>
+          <div class="readout"><span class="label">Scale</span><span class="big"><span id="bGrams">0</span><small> g</small></span></div>
+          <div class="readout grow"><span class="label">Now</span><span class="now" id="bNow" aria-live="polite">Press start and pour along.</span></div>
+        </div>
+        <div class="bbar" aria-hidden="true"><span id="bBar"></span></div>
+        <div class="console-actions">
+          <button class="btn" type="button" id="bStart">Start brew</button>
+          <button class="btn-ghost" type="button" id="bReset">Reset</button>
+          <span class="note">Runs 10× faster than real time</span>
+        </div>
+      </div>
+      <ol class="pours" id="pours">
         <li><time>0:00</time><h3>Bloom</h3><p class="grams">→ 40 g</p><p>Wet all the grounds, swirl once, and let the gas escape.</p></li>
         <li><time>0:35</time><h3>First pour</h3><p class="grams">→ 150 g</p><p>Slow circles from the centre out. Stay off the paper.</p></li>
         <li><time>1:15</time><h3>Second pour</h3><p class="grams">→ 250 g</p><p>Keep the water level steady and the bed flat.</p></li>
@@ -420,7 +519,16 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
   <section class="wrap reviews" id="reviews" aria-labelledby="revTitle">
     <div class="sec-head">
       <h2 id="revTitle">What people brew with it</h2>
-      <p class="note">Sample reviews written for this demo.</p>
+      <div class="rating-sum">
+        <div class="rs-score"><span class="big">4.8</span><span class="stars" aria-hidden="true">★★★★★</span><span class="note">126 reviews · sample data</span></div>
+        <ul class="rs-bars" aria-label="Rating breakdown">
+          <li><span>5★</span><span class="rs-track"><span style="width:84.1%"></span></span><span class="mono">106</span></li>
+          <li><span>4★</span><span class="rs-track"><span style="width:11.9%"></span></span><span class="mono">15</span></li>
+          <li><span>3★</span><span class="rs-track"><span style="width:3.2%"></span></span><span class="mono">4</span></li>
+          <li><span>2★</span><span class="rs-track"><span style="width:0.8%"></span></span><span class="mono">1</span></li>
+          <li><span>1★</span><span class="rs-track"><span style="width:0%"></span></span><span class="mono">0</span></li>
+        </ul>
+      </div>
     </div>
     <div class="rev-grid">
       <figure class="rev">
@@ -592,7 +700,7 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
     state.glaze = k;
     stage.dataset.glaze = k;
     $$('[data-glaze-name]').forEach(e => { e.textContent = GLAZES[k].name; });
-    $('#sideTitle').textContent = `Stożek 02 dripper in ${GLAZES[k].name} glaze, side view`;
+    $('#sideTitle').textContent = `Stożek 02 dripper in ${GLAZES[k].name} glaze on a glass server, side view`;
     $('#topTitle').textContent = `Stożek 02 dripper in ${GLAZES[k].name} glaze, seen from above`;
   }
   $$('input[name="glaze"]').forEach(i => i.addEventListener('change', () => setGlaze(i.value)));
@@ -682,6 +790,75 @@ dialog.co::backdrop{background:rgba(8,12,11,.55);backdrop-filter:blur(2px)}
     closeCheckout();
     $('#orders').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   });
+
+  // Brew timer: the scale, the steps and the carafe follow the recipe (10× speed)
+  const SPEED = 10, TOTAL = 210, LOW = 470, FULL = 404, YIELD = 214;
+  const STEPS = [
+    { at: 0, now: 'Bloom: pour to 40 g, swirl, then wait.' },
+    { at: 35, now: 'First pour: slow circles up to 150 g.' },
+    { at: 75, now: 'Second pour: up to 250 g, keep the bed level.' },
+    { at: 165, now: 'Drawdown: hands off, let it drain.' }
+  ];
+  const grams = t => t < 10 ? 40 * t / 10 : t < 35 ? 40 : t < 60 ? 40 + 110 * (t - 35) / 25
+    : t < 75 ? 150 : t < 105 ? 150 + 100 * (t - 75) / 30 : 250;
+  const pours = $('#pours'), pourItems = $$('#pours li');
+  const coffee = $('#coffee'), coffeeTop = $('#coffeeTop'), stream = $('#stream');
+  function setLevel(liquid, flowing) {
+    const y = (LOW - (LOW - FULL) * Math.min(1, liquid / YIELD)).toFixed(1);
+    coffee.setAttribute('y', y);
+    coffeeTop.setAttribute('cy', y);
+    stream.setAttribute('d', `M200 246 L200 ${y}`);
+    stream.classList.toggle('is-stopped', !flowing);
+  }
+  const clock = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+  let bt = 0, brewing = false, started = false, last = 0, raf = 0;
+  function paint() {
+    const finished = bt >= TOTAL;
+    let idx = 0;
+    STEPS.forEach((s, i) => { if (bt >= s.at) idx = i; });
+    $('#bClock').textContent = clock(bt);
+    $('#bGrams').textContent = Math.round(grams(bt));
+    $('#bBar').style.width = (bt / TOTAL * 100).toFixed(2) + '%';
+    pours.style.setProperty('--p', (bt / TOTAL * 100).toFixed(2) + '%');
+    pourItems.forEach((li, i) => {
+      li.classList.toggle('is-done', finished || i < idx);
+      li.classList.toggle('is-active', !finished && i === idx);
+    });
+    const text = finished ? 'Done at 3:30. Pour a cup and taste it.' : STEPS[idx].now;
+    if ($('#bNow').textContent !== text) $('#bNow').textContent = text;
+    setLevel(Math.max(0, grams(Math.max(0, bt - 18)) - 36), !finished && bt > 14);
+  }
+  function frame(ts) {
+    if (!brewing) return;
+    bt = Math.min(TOTAL, bt + (last ? (ts - last) / 1000 : 0) * SPEED);
+    last = ts;
+    paint();
+    if (bt >= TOTAL) { brewing = false; $('#bStart').textContent = 'Brew again'; return; }
+    raf = requestAnimationFrame(frame);
+  }
+  $('#bStart').addEventListener('click', () => {
+    if (brewing) {
+      brewing = false; cancelAnimationFrame(raf);
+      $('#bStart').textContent = 'Resume';
+      return;
+    }
+    if (!started || bt >= TOTAL) bt = 0;
+    started = true; brewing = true; last = 0;
+    pours.classList.add('running');
+    $('#bStart').textContent = 'Pause';
+    paint();
+    raf = requestAnimationFrame(frame);
+  });
+  $('#bReset').addEventListener('click', () => {
+    brewing = false; started = false; bt = 0; cancelAnimationFrame(raf);
+    pours.classList.remove('running');
+    paint();
+    pourItems.forEach(li => li.classList.remove('is-done', 'is-active'));
+    $('#bNow').textContent = 'Press start and pour along.';
+    $('#bStart').textContent = 'Start brew';
+    setLevel(170, true);
+  });
+  setLevel(170, true);
 
   render();
 })();
