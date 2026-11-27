@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Portfolio covers</title>
+<!--
+  Cover generator for freelance profiles. Serve the parent folder of ghdhd/ and
+  maksym2021.github.io/ over HTTP, open this page with a variant and screenshot
+  the viewport at the matching size:
+    ?v=project&p=stozek&lang=en   1600x1200  (Freelancer, Upwork, Freelancehunt, Useme)
+    ?v=wide&p=rowcount&lang=en    1280x769   (Fiverr gallery)
+    ?v=gig                        1280x769   (Fiverr main image)
+    ?v=og                         1200x630   (link preview for the site)
+-->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #f6f5f0; --card: #fff; --ink: #121614; --ink-2: #4b534f; --line: #dddcd3; --accent: #d4f75e; --green: #12715b; --green-soft: #e1f0ea; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { overflow: hidden; }
+  body {
+    background: var(--paper); color: var(--ink); font-family: "Figtree", sans-serif;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px; background-position: -1px -1px;
+  }
+  .canvas { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+  .canvas::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 10%, rgba(246,245,240,.97) 35%, rgba(246,245,240,.72) 100%); }
+  .canvas > * { position: absolute; }
+  .eyebrow { font: 500 22px/1.2 "JetBrains Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--green); background: var(--green-soft); padding: 12px 18px; border-radius: 999px; display: inline-block; }
+  h1 { font: 800 76px/1.02 "Bricolage Grotesque", sans-serif; letter-spacing: -.025em; }
+  .sub { font: 500 30px/1.35 "Figtree", sans-serif; color: var(--ink-2); }
+  .browser { border-radius: 22px; overflow: hidden; background: var(--card); border: 2px solid var(--line); box-shadow: 0 30px 80px -30px rgba(18,22,20,.45); }
+  .bar { display: flex; gap: 10px; padding: 16px 20px; border-bottom: 2px solid var(--line); }
+  .bar i { width: 15px; height: 15px; border-radius: 50%; background: var(--line); }
+  .browser img, .phone img { display: block; width: 100%; }
+  .phone { border-radius: 40px; overflow: hidden; border: 10px solid var(--ink); background: var(--ink); box-shadow: 0 30px 70px -25px rgba(18,22,20,.6); }
+  .brand { display: flex; align-items: center; gap: 14px; font: 700 28px/1 "Bricolage Grotesque", sans-serif; }
+  .mark { width: 46px; height: 46px; border-radius: 13px; background: var(--ink); color: var(--accent); display: grid; place-items: center; font: 800 25px/1 "Bricolage Grotesque", sans-serif; }
+  .url { font: 500 22px/1 "JetBrains Mono", monospace; color: var(--ink-2); }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .chips span { font: 500 20px/1 "JetBrains Mono", monospace; padding: 11px 15px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); color: var(--ink-2); }
+  .ticks { list-style: none; padding: 0; display: grid; gap: 14px; font: 500 28px/1.3 "Figtree", sans-serif; }
+  .ticks li::before { content: "✓"; color: var(--green); font-weight: 800; margin-right: 14px; }
+  .flow { background: var(--ink); border-radius: 26px; padding: 22px; display: grid; gap: 10px; box-shadow: 0 30px 70px -25px rgba(18,22,20,.6); }
+  .flow .n { display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: center; background: #1d2320; border: 1px solid #2b332f; border-radius: 14px; padding: 11px 14px; color: #fff; font: 600 20px/1.2 "Figtree", sans-serif; }
+  .flow .n > div > span { display: block; color: #9aa59f; font: 400 15px/1.3 "JetBrains Mono", monospace; margin-top: 3px; }
+  .flow .ico { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: #2a322e; font-size: 22px; }
+  .flow .core { background: #26300f; border-color: #46581a; }
+  .flow .core .ico { background: var(--accent); color: #1c2a00; }
+  .flow .indent { margin-left: 30px; }
+  .hl { background: linear-gradient(transparent 60%, var(--accent) 60%, var(--accent) 92%, transparent 92%); }
+</style>
+</head>
+<body>
+<div class="canvas" id="c"></div>
+<script>
+  const SITE = '../../maksym2021.github.io/';
+  const P = {
+    stozek: {
+      shot: 'stozek-desktop.png', mobile: 'stozek-mobile.png',
+      chips: ['HTML', 'CSS', 'JavaScript', 'Stripe', 'n8n', 'Google Sheets'],
+      en: ['Demo project · E-commerce landing', 'Product page with one-step checkout', 'Card, Apple Pay, Google Pay, BLIK → confirmation email → orders table'],
+      pl: ['Projekt demo · Landing sklepu', 'Strona produktu z płatnością w jednym kroku', 'Karta, Apple Pay, Google Pay, BLIK → mail z potwierdzeniem → tabela zamówień'],
+      uk: ['Демо-проєкт · Лендінг магазину', 'Сторінка товару з оплатою в один крок', 'Картка, Apple Pay, Google Pay, BLIK → лист-підтвердження → таблиця замовлень']
+    },
+    rowcount: {
+      shot: 'rowcount-done.png', mobile: 'rowcount-mobile.png',
+      chips: ['HTML', 'CSS', 'JavaScript', 'Mailchimp', 'n8n', 'SMS'],
+      en: ['Demo project · Lead generation', 'Webinar landing page with lead flow', 'Validated form → Mailchimp tag → confirmation email → SMS reminder'],
+      pl: ['Projekt demo · Pozyskiwanie leadów', 'Landing webinaru z obsługą zgłoszeń', 'Formularz z walidacją → tag w Mailchimp → mail z potwierdzeniem → SMS'],
+      uk: ['Демо-проєкт · Збір заявок', 'Лендінг вебінару з обробкою заявок', 'Форма з валідацією → тег у Mailchimp → лист-підтвердження → SMS']
+    }
+  };
+  const q = new URLSearchParams(location.search);
+  const v = q.get('v') || 'project', p = P[q.get('p') || 'stozek'], lang = q.get('lang') || 'en';
+  const c = document.getElementById('c');
+  const brand = `<div class="brand"><span class="mark">M</span>Maksym</div>`;
+  const browser = (src, style) => `<div class="browser" style="${style}"><div class="bar"><i></i><i></i><i></i></div><img src="${SITE}assets/shots/${src}"></div>`;
+  const phone = (src, style) => `<div class="phone" style="${style}"><img src="${SITE}assets/shots/${src}"></div>`;
+  const chips = list => list.map(x => `<span>${x}</span>`).join('');
+  const flow = style => `<div class="flow" style="${style}">
+      <div class="n"><span class="ico">✉</span><div>Form submitted<span>name, email, phone</span></div></div>
+      <div class="n core"><span class="ico">⚙</span><div>n8n workflow<span>validate · dedupe · score</span></div></div>
+      <div class="n indent"><span class="ico">▦</span><div>Google Sheets<span>new row added</span></div></div>
+      <div class="n indent"><span class="ico">➤</span><div>Telegram<span>you get an alert</span></div></div>
+      <div class="n indent"><span class="ico">↩</span><div>Email<span>reply sent to the lead</span></div></div>
+    </div>`;
+
+  if (v === 'project') {
+    const [eb, title, sub] = p[lang];
+    c.innerHTML = `
+      <div id="hdr" style="left:90px; top:84px; width:1420px">
+        <span class="eyebrow">${eb}</span>
+        <h1 style="margin:28px 0 22px; max-width:1300px">${title}</h1>
+        <p class="sub" style="max-width:1300px">${sub}</p>
+      </div>
+      ${browser(p.shot, 'left:90px; width:1180px')}
+      ${phone(p.mobile, 'left:1210px; width:300px')}
+      <div style="right:90px; top:84px">${brand}</div>`;
+    // Put the screenshots right under the text, whatever its length.
+    document.fonts.ready.then(() => {
+      const top = document.getElementById('hdr').getBoundingClientRect().bottom + 64;
+      c.querySelector('.browser').style.top = top + 'px';
+      c.querySelector('.phone').style.top = (top + 60) + 'px';
+    });
+  } else if (v === 'wide') {
+    const [eb, title, sub] = p[lang];
+    c.innerHTML = `
+      <div style="left:64px; top:64px; width:560px">
+        <span class="eyebrow" style="font-size:17px">${eb}</span>
+        <h1 style="font-size:54px; margin:22px 0 18px">${title}</h1>
+        <p class="sub" style="font-size:22px">${sub}</p>
+        <div class="chips" style="margin-top:28px">${chips(p.chips)}</div>
+      </div>
+      ${browser(p.shot, 'left:660px; top:110px; width:760px')}
+      ${phone(p.mobile, 'left:1010px; top:330px; width:210px')}`;
+  } else if (v === 'gig') {
+    c.innerHTML = `
+      <div style="left:64px; top:60px; width:640px">
+        ${brand}
+        <h1 style="font-size:66px; margin:34px 0 26px">Landing page <span class="hl">+ lead automation</span></h1>
+        <ul class="ticks" style="font-size:25px">
+          <li>Mobile-first HTML, CSS and JS</li>
+          <li>Form → Google Sheets, CRM or Telegram</li>
+          <li>n8n follow-up emails and reminders</li>
+        </ul>
+      </div>
+      ${phone('stozek-mobile.png', 'left:760px; top:70px; width:250px; transform:rotate(-4deg)')}
+      ${flow('left:930px; top:250px; width:310px; transform:scale(.92); transform-origin:top left')}`;
+  } else if (v === 'og') {
+    c.innerHTML = `
+      <div style="left:64px; top:58px; width:640px">
+        ${brand}
+        <h1 style="font-size:58px; margin:40px 0 24px">Landing pages that catch <span class="hl">every lead</span>, and automation that answers it.</h1>
+        <div class="url">maksym2021.github.io</div>
+      </div>
+      ${flow('left:770px; top:70px; width:370px')}`;
+  }
+</script>
+</body>
+</html>
